@@ -43,20 +43,35 @@ class Options(QtWidgets.QTabWidget):
 
         self.music = QSlider(Qt.Orientation.Horizontal, self)
         self.music.setGeometry(470, 50, 100, 10)
+        self.music.setValue(50)
+        self.music.valueChanged.connect(self.music_value)
+        
+
+        self.music_number_label = QLabel("50", self)
+        self.music_number_label.setGeometry(575, 45, 100, 10)
+        
 
         self.sound_label = QLabel("Sound", self)
         self.sound_label.setGeometry(430, 76, 100, 10)
 
         self.sound = QSlider(Qt.Orientation.Horizontal, self)
         self.sound.setGeometry(470, 78, 100, 10)
+        self.sound.setValue(50)
+        self.sound.valueChanged.connect(self.sound_value)
+        
+
+        self.sound_number_label = QLabel("50", self)
+        self.sound_number_label.setGeometry(575, 75, 100, 10)
 
         self.color = QPushButton("Username Color", self)
         self.color.setGeometry(20, 20, 100, 20)
         self.color.clicked.connect(self.choose_color)
 
     def back_to_menu(self):
+        user = self.username.text()
+        save = {'username':user}
 
-        self.menu_back = AimMenu.Menu()
+        self.menu_back = AimMenu.Menu(save)
         self.menu_back.show()
         self.close()
 
@@ -71,8 +86,6 @@ class Options(QtWidgets.QTabWidget):
             print(color_v)
             if color_v_counter < 3:
                 if color_v > 220:
-                    print('x')
-                    print(color_v_counter)
                     color_v_counter += 1
                     continue
             if color_v_counter == 3:
@@ -84,10 +97,15 @@ class Options(QtWidgets.QTabWidget):
                     f"color: rgb({255}, {0}, {0})"
                 )
             else:
-                                self.username_color_warning_label.setStyleSheet(
+                self.username_color_warning_label.setStyleSheet(
                     f"color: rgb({255}, {255}, {255})"
                 )
 
+    def music_value(self):
+        self.music_number_label.setText(str(self.music.value() + 1))
+
+    def sound_value(self):
+        self.sound_number_label.setText(str(self.sound.value() + 1))
 
     def change_username(self):
         new_username = self.username_qline.text()

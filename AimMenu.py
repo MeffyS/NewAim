@@ -1,7 +1,7 @@
 import PySide2
 import PySide6
 from PySide6 import QtWidgets
-from PySide6.QtWidgets import QPushButton
+from PySide6.QtWidgets import QPushButton, QLabel
 from PySide6.QtGui import QCursor, QIcon
 import AimOptions
 import sys
@@ -9,8 +9,16 @@ import time
 
 
 class Menu(QtWidgets.QWidget):
-    def __init__(self):
+    def __init__(self, save):
         super().__init__()
+
+        try:
+            self.welcome_label = QLabel(
+                f'WELCOME {save["username"]} IN AIM TRAIN', self
+            )
+            self.welcome_label.setGeometry(5, 20, 245, 30)
+        except Exception:
+            print("")
 
         self.setGeometry(100, 100, 1200, 1200)
         self.setWindowTitle("Aim menu")
@@ -43,7 +51,6 @@ class Menu(QtWidgets.QWidget):
         self.options_window.show()
         self.close()
 
-
     def aim_exit(self):
         sys.exit()
 
@@ -51,7 +58,7 @@ class Menu(QtWidgets.QWidget):
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
 
-    aim_menu = Menu()
+    aim_menu = Menu("")
 
     aim_menu.resize(800, 600)
     aim_menu.show()
