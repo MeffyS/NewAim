@@ -1,11 +1,14 @@
+import sys
+import time
+import os
+
 import PySide2
 import PySide6
+import AimOptions
+
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import QPushButton, QLabel
 from PySide6.QtGui import QCursor, QIcon
-import AimOptions
-import sys
-import time
 
 
 class Menu(QtWidgets.QWidget):
@@ -18,7 +21,9 @@ class Menu(QtWidgets.QWidget):
             )
             self.welcome_label.setGeometry(5, 20, 245, 30)
         except Exception:
-            print("")
+            self.welcome_label = QLabel(f"WELCOME {os.getlogin()} IN AIM TRAIN", self)
+            self.welcome_label.setGeometry(5, 20, 245, 30)
+            
 
         self.setGeometry(100, 100, 1200, 1200)
         self.setWindowTitle("Aim menu")

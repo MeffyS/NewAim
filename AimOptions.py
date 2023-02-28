@@ -1,12 +1,10 @@
-import PySide2
-import PySide6
+import sys
+
+import AimMenu
+
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import QPushButton, QSlider, QLabel, QColorDialog, QLineEdit
 from PySide6.QtGui import QCursor, QIcon, Qt, QColor
-import sys
-import time
-import AimMenu
-
 
 class Options(QtWidgets.QTabWidget):
     def __init__(self):
@@ -35,7 +33,7 @@ class Options(QtWidgets.QTabWidget):
         self.username_button.setGeometry(500, 104, 100, 20)
         self.username_button.clicked.connect(self.change_username)
 
-        self.username = QLabel("", self)
+        self.username = QLabel(f"", self)
         self.username.setGeometry(50, 50, 100, 20)
 
         self.music_label = QLabel("Music", self)
