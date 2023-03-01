@@ -2,53 +2,120 @@ import sys
 import time
 import os
 
-import PySide2
-import PySide6
+
 import AimOptions
+import AimStart
 
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import QPushButton, QLabel
 from PySide6.QtGui import QCursor, QIcon
+from PySide6 import QtCore
 
 
 class Menu(QtWidgets.QWidget):
     def __init__(self, save):
         super().__init__()
 
+        self.setFixedHeight(600)
+        self.setFixedWidth(600)
+
         try:
             self.welcome_label = QLabel(
-                f'WELCOME {save["username"]} IN AIM TRAIN', self
+                f'WELCOME {save["username"]} IN AIM TRAINING', self
             )
-            self.welcome_label.setGeometry(5, 20, 245, 30)
-        except Exception:
-            self.welcome_label = QLabel(f"WELCOME {os.getlogin()} IN AIM TRAIN", self)
-            self.welcome_label.setGeometry(5, 20, 245, 30)
             
+        except Exception:
+            self.welcome_label = QLabel(f"WELCOME {os.getlogin()} IN AIM TRAINING", self)
+
+        self.welcome_label.setGeometry(100, 20, 450, 50)
+        self.welcome_label.setAlignment(QtCore.Qt.AlignCenter)
 
         self.setGeometry(100, 100, 1200, 1200)
         self.setWindowTitle("Aim menu")
         self.setWindowIcon(QIcon("Aim_icons\click.png"))
 
         self.start_button = QPushButton("Start Aim", self)
-        self.start_button.setGeometry(80, 50, 100, 30)
+        self.start_button.setGeometry(210, 120, 200, 100)
         self.start_button.clicked.connect(self.aim_start)
-        self.setFixedHeight(250)
-        self.setFixedWidth(250)
+        
 
         self.options_button = QPushButton("Options", self)
-        self.options_button.setGeometry(80, 100, 100, 30)
+        self.options_button.setGeometry(210, 260, 200, 100)
         self.options_button.clicked.connect(self.aim_options)
-        self.setFixedHeight(250)
-        self.setFixedWidth(250)
 
         self.exit_button = QPushButton("Exit", self)
-        self.exit_button.setGeometry(80, 150, 100, 30)
+        self.exit_button.setGeometry(210, 400, 200, 100)
         self.exit_button.clicked.connect(self.aim_exit)
-        self.setFixedHeight(250)
-        self.setFixedWidth(250)
+
+        self.setStyleSheet("background-color: #135440")
+
+        self.start_button.setStyleSheet(
+            """
+            QPushButton {
+                color: #75a154; 
+                background-color: #2a6b48;
+                border: 2px solid #45814e;
+                border-radius: 20px;
+                font-size: 25px;
+
+            }
+            QPushButton:hover {
+                color: #9ab657;
+            }
+        """
+        )
+
+        self.options_button.setStyleSheet(
+            """
+            QPushButton {
+                color: #75a154; 
+                background-color: #2a6b48;
+                border: 2px solid #45814e;
+                border-radius: 20px;
+                font-size: 25px;
+
+            }
+            QPushButton:hover {
+                color: #9ab657;
+            }
+        """
+        )
+
+        self.exit_button.setStyleSheet(
+            """
+            QPushButton {
+                color: #75a154; 
+                background-color: #2a6b48;
+                border: 2px solid #45814e;
+                border-radius: 20px;
+                font-size: 25px;
+
+            }
+            QPushButton:hover {
+                color: #9ab657;
+            }
+        """
+        )
+
+        self.welcome_label.setStyleSheet(
+            """
+            QLabel {
+                color: #75a154; 
+                background-color: #2a6b48;
+                border: 2px solid #45814e;
+                border-radius: 20px;
+                font-size: 20px;
+                
+
+            }
+    
+        """
+        )
 
     def aim_start(self):
-        print("start")
+        self.close()
+        self.aim_start = AimStart.Lobby()
+        self.aim_start.show()
 
     def aim_options(self):
         self.close()

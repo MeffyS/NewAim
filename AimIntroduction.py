@@ -3,6 +3,7 @@ import sys
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import QApplication, QLabel, QPushButton
 from PySide6.QtGui import QCursor, QIcon
+from PyQt5.QtCore import QFile, QTextStream
 
 
 class Introduction(QtWidgets.QWidget):
@@ -18,17 +19,17 @@ class Introduction(QtWidgets.QWidget):
         self.head_introduction_label = QLabel(
             "WELCOME PLAYER IN OUR AIM TRAINING", self
         )
-        self.head_introduction_label.setGeometry(20, 50, 580, 30)
+        self.head_introduction_label.setGeometry(20, 50, 580, 50)
 
         self.post_introduction_label = QLabel(
             "I am very pleased and glad that u downloaded my aim training", self
         )
-        self.post_introduction_label.setGeometry(25, 130, 580, 100)
+        self.post_introduction_label.setGeometry(25, 130, 580, 200)
 
         self.second_post_introduction_label = QLabel(
             "CLICK NEXT TO GET MORE INFORMATION ABOUT AIM GAME", self
         )
-        self.second_post_introduction_label.setGeometry(25, 230, 580, 100)
+        self.second_post_introduction_label.setGeometry(25, 330, 580, 100)
 
         self.footer_label = QLabel("Created By: Meffy", self)
         self.footer_label.setGeometry(250, 580, 120, 20)
@@ -41,12 +42,23 @@ class Introduction(QtWidgets.QWidget):
         self.back_step.clicked.connect(self.description)
         self.back_step.setGeometry(0, 550, 100, 50)
 
+        self.play_button = QPushButton("Play", self)
+        self.play_button.setGeometry(250, 280, 120, 50)
+
         self.back_step.hide()
+        self.play_button.hide()
+
+        
+        self.introduction_styles()
+
+    def introduction_styles(self):
+
+        self.setStyleSheet("background-color: #135440")
 
         self.head_introduction_label.setStyleSheet(
             """
             QLabel {
-            color: red;
+            color: #9ab657;
             font-size: 30px;
             }
             """
@@ -55,7 +67,7 @@ class Introduction(QtWidgets.QWidget):
         self.post_introduction_label.setStyleSheet(
             """
             QLabel {
-            color: red;
+            color: #9ab657;
             font-size: 20px;
             }
             
@@ -65,7 +77,7 @@ class Introduction(QtWidgets.QWidget):
         self.second_post_introduction_label.setStyleSheet(
             """
             QLabel {
-            color: red;
+            color: #9ab657;
             font-size: 20px;
             }
             
@@ -75,15 +87,15 @@ class Introduction(QtWidgets.QWidget):
         self.next_step.setStyleSheet(
             """
             QPushButton {
-                color: #008000; 
-                background-color: #272727;
-                border: 2px solid white;
+                color: #75a154; 
+                background-color: #2a6b48;
+                border: 2px solid #45814e;
                 border-radius: 20px;
                 font-size: 25px;
 
             }
             QPushButton:hover {
-                color: #00DD00;
+                color: #9ab657;
             }
             """
         )
@@ -91,15 +103,31 @@ class Introduction(QtWidgets.QWidget):
         self.back_step.setStyleSheet(
             """
             QPushButton {
-                color: #008000; 
-                background-color: #272727;
-                border: 2px solid white;
+                color: #75a154; 
+                background-color: #2a6b48;
+                border: 2px solid #45814e;
                 border-radius: 20px;
                 font-size: 25px;
 
             }
             QPushButton:hover {
-                color: #00DD00;
+                color: #9ab657;
+            }
+            """
+        )
+
+        self.play_button.setStyleSheet(
+            """
+            QPushButton {
+                color: #75a154; 
+                background-color: #2a6b48;
+                border: 2px solid #45814e;
+                border-radius: 20px;
+                font-size: 25px;
+
+            }
+            QPushButton:hover {
+                color: #9ab657;
             }
             """
         )
@@ -110,14 +138,33 @@ class Introduction(QtWidgets.QWidget):
             self.post_introduction_label.setText(
                 "I am very pleased and glad that u downloaded my aim training"
             )
+            self.head_introduction_label.setStyleSheet(
+                """QLabel {color: #9ab657;font-size: 30px;}"""
+            )
         elif self.step_count == 1:
-            self.head_introduction_label.setText("Nic")
-            self.post_introduction_label.setText("Nic")
+            self.head_introduction_label.setText(
+                "The main goal Aim Game is improve your fast reaction skill"
+            )
+
+            self.post_introduction_label.setText(
+                "Your main goal is fast click on showing object. \nAfter clicked specific object amount \nYou will be advancing on next level \
+            \nYou have only 4 hearts, \nbut you can get more using your gained points"
+            )
             self.second_post_introduction_label.setText("")
+
+            # STYLESHEET
+            self.head_introduction_label.setStyleSheet(
+                """QLabel {color: #9ab657;font-size: 20px;}"""
+            )
+            self.play_button.hide()
+
         elif self.step_count == 2:
-            self.head_introduction_label.setText("Hello")
-            self.post_introduction_label.setText("Hi")
+            self.head_introduction_label.setText("")
+            self.post_introduction_label.setText("")
             self.second_post_introduction_label.setText("")
+            self.play_button.show()
+            
+            
 
     def description(self):
         sender = self.sender()
@@ -137,6 +184,7 @@ class Introduction(QtWidgets.QWidget):
             if self.step_count == 0:
                 self.back_step.hide()
                 self.next_step.show()
+
 
 
 if __name__ == "__main__":
