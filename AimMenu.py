@@ -9,7 +9,7 @@ import AimStart
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import QPushButton, QLabel
 from PySide6.QtGui import QCursor, QIcon
-from PySide6 import QtCore
+from PySide6.QtCore import Qt 
 
 
 class Menu(QtWidgets.QWidget):
@@ -23,12 +23,14 @@ class Menu(QtWidgets.QWidget):
             self.welcome_label = QLabel(
                 f'WELCOME {save["username"]} IN AIM TRAINING', self
             )
-            
+
         except Exception:
-            self.welcome_label = QLabel(f"WELCOME {os.getlogin()} IN AIM TRAINING", self)
+            self.welcome_label = QLabel(
+                f"WELCOME {os.getlogin()} IN AIM TRAINING", self
+            )
 
         self.welcome_label.setGeometry(100, 20, 450, 50)
-        self.welcome_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.welcome_label.setAlignment(Qt.AlignCenter)
 
         self.setGeometry(100, 100, 1200, 1200)
         self.setWindowTitle("Aim menu")
@@ -37,7 +39,6 @@ class Menu(QtWidgets.QWidget):
         self.start_button = QPushButton("Start Aim", self)
         self.start_button.setGeometry(210, 120, 200, 100)
         self.start_button.clicked.connect(self.aim_start)
-        
 
         self.options_button = QPushButton("Options", self)
         self.options_button.setGeometry(210, 260, 200, 100)
@@ -100,8 +101,8 @@ class Menu(QtWidgets.QWidget):
         self.welcome_label.setStyleSheet(
             """
             QLabel {
-                color: #75a154; 
-                background-color: #2a6b48;
+                color: #9ab657; 
+                background-color: #0e4232;
                 border: 2px solid #45814e;
                 border-radius: 20px;
                 font-size: 20px;

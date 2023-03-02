@@ -4,6 +4,7 @@ from PySide6 import QtWidgets
 from PySide6.QtWidgets import QApplication, QLabel, QPushButton
 from PySide6.QtGui import QCursor, QIcon
 from PyQt5.QtCore import QFile, QTextStream
+from PySide6 import QtCore
 
 
 class Introduction(QtWidgets.QWidget):
@@ -16,20 +17,14 @@ class Introduction(QtWidgets.QWidget):
         self.setFixedHeight(600)
         self.setFixedWidth(600)
 
-        self.head_introduction_label = QLabel(
-            "WELCOME PLAYER IN OUR AIM TRAINING", self
-        )
-        self.head_introduction_label.setGeometry(20, 50, 580, 50)
-
         self.post_introduction_label = QLabel(
-            "I am very pleased and glad that u downloaded my aim training", self
+            "WELCOME PLAYER IN OUR AIM TRAINING \
+            \n\n\nI am very pleased and glad that u downloaded my aim training \
+            \n\n\nCLICK NEXT TO GET MORE INFORMATION ABOUT AIM GAME",
+            self
         )
-        self.post_introduction_label.setGeometry(25, 130, 580, 200)
-
-        self.second_post_introduction_label = QLabel(
-            "CLICK NEXT TO GET MORE INFORMATION ABOUT AIM GAME", self
-        )
-        self.second_post_introduction_label.setGeometry(25, 330, 580, 100)
+        self.post_introduction_label.setGeometry(25, 130, 560, 200)
+        self.post_introduction_label.setAlignment(QtCore.Qt.AlignCenter)
 
         self.footer_label = QLabel("Created By: Meffy", self)
         self.footer_label.setGeometry(250, 580, 120, 20)
@@ -48,33 +43,13 @@ class Introduction(QtWidgets.QWidget):
         self.back_step.hide()
         self.play_button.hide()
 
-        
         self.introduction_styles()
 
     def introduction_styles(self):
 
         self.setStyleSheet("background-color: #135440")
 
-        self.head_introduction_label.setStyleSheet(
-            """
-            QLabel {
-            color: #9ab657;
-            font-size: 30px;
-            }
-            """
-        )
-
         self.post_introduction_label.setStyleSheet(
-            """
-            QLabel {
-            color: #9ab657;
-            font-size: 20px;
-            }
-            
-            """
-        )
-
-        self.second_post_introduction_label.setStyleSheet(
             """
             QLabel {
             color: #9ab657;
@@ -132,39 +107,52 @@ class Introduction(QtWidgets.QWidget):
             """
         )
 
+        self.post_introduction_label.setStyleSheet(
+            """
+            QLabel {
+                color: #9ab657; 
+                background-color: #0e4232;
+                border: 2px solid #45814e;
+                border-radius: 20px;
+                font-size: 20px;
+                
+
+            }
+    
+        """
+        )
+
+
     def update_labels(self):
         if self.step_count == 0:
-            self.head_introduction_label.setText("WELCOME PLAYER IN OUR AIM TRAINING")
             self.post_introduction_label.setText(
-                "I am very pleased and glad that u downloaded my aim training"
+                "WELCOME PLAYER IN OUR AIM TRAINING \
+            \n\n\nI am very pleased and glad that u downloaded my aim training \
+            \n\n\nCLICK NEXT TO GET MORE INFORMATION ABOUT AIM GAME"
             )
-            self.head_introduction_label.setStyleSheet(
-                """QLabel {color: #9ab657;font-size: 30px;}"""
-            )
+
         elif self.step_count == 1:
-            self.head_introduction_label.setText(
-                "The main goal Aim Game is improve your fast reaction skill"
-            )
 
             self.post_introduction_label.setText(
                 "Your main goal is fast click on showing object. \nAfter clicked specific object amount \nYou will be advancing on next level \
             \nYou have only 4 hearts, \nbut you can get more using your gained points"
             )
-            self.second_post_introduction_label.setText("")
+            
 
-            # STYLESHEET
-            self.head_introduction_label.setStyleSheet(
-                """QLabel {color: #9ab657;font-size: 20px;}"""
-            )
             self.play_button.hide()
+            self.post_introduction_label.setStyleSheet(
+            """QLabel {color: #9ab657; background-color: #0e4232;border: 2px solid #45814e;border-radius: 20px;font-size: 20px;}"""
+        )
+            
 
         elif self.step_count == 2:
-            self.head_introduction_label.setText("")
             self.post_introduction_label.setText("")
-            self.second_post_introduction_label.setText("")
             self.play_button.show()
-            
-            
+
+            self.post_introduction_label.setStyleSheet(
+                """QLabel {}"""
+            )
+
 
     def description(self):
         sender = self.sender()
@@ -184,7 +172,6 @@ class Introduction(QtWidgets.QWidget):
             if self.step_count == 0:
                 self.back_step.hide()
                 self.next_step.show()
-
 
 
 if __name__ == "__main__":
