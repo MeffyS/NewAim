@@ -25,48 +25,16 @@ class Options(QtWidgets.QTabWidget):
         self.setGeometry(100, 100, 1200, 1200)
         self.setWindowTitle("Options")
         self.setWindowIcon(QIcon("Aim_icons\settings.png"))
+        self.setStyleSheet("background-color: #135440")
+
         self.audio_options()
         self.user_options()
+        self.difficulty_options()
 
         self.save_button = QPushButton("Save", self)
         self.save_button.setGeometry(390, 540, 200, 50)
         self.save_button.clicked.connect(self.back_to_menu)
 
-        self.username_label = QLabel("Choose username", self)
-        self.username_label.setGeometry(300, 308, 100, 10)
-
-        self.username_color_warning_label = QLabel("", self)
-        self.username_color_warning_label.setGeometry(125, 50, 300, 20)
-
-        self.username_qline = QLineEdit(self)
-        self.username_qline.setGeometry(400, 304, 100, 20)
-
-        self.username_button = QPushButton("Enter username", self)
-        self.username_button.setGeometry(210, 520, 200, 50)
-        self.username_button.clicked.connect(self.change_username)
-
-        self.username = QLabel(f"", self)
-        self.username.setGeometry(50, 50, 100, 20)
-
-        self.color = QPushButton("Username Color", self)
-        self.color.setGeometry(20, 200, 100, 20)
-        self.color.clicked.connect(self.choose_color)
-
-        self.username_button.setStyleSheet(
-            """
-            QPushButton {
-                color: #75a154; 
-                background-color: #2a6b48;
-                border: 2px solid #45814e;
-                border-radius: 20px;
-                font-size: 25px;
-
-            }
-            QPushButton:hover {
-                color: #9ab657;
-            }
-            """
-        )
         self.save_button.setStyleSheet(
             """
             QPushButton {
@@ -85,33 +53,110 @@ class Options(QtWidgets.QTabWidget):
 
     def user_options(self):
         self.user_label = QLabel("User", self)
-        self.user_label.setGeometry(260, 78, 80, 30)
+        self.user_label.setGeometry(2, 78, 80, 30)
         self.user_label.setStyleSheet(
-            "font-size: 25px; font-weight: bold; background-color: #70e5ba; color: #ffffff; border: 3px solid #61c7a2; border-radius: 10px;"
+            "font-size: 25px; font-weight: bold; color: #ffffff; border: 3px solid #61c7a2; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; background-color: #70e5ba;"
         )
         self.user_label.setAlignment(QtCore.Qt.AlignCenter)
 
+        self.username_label = QLabel("Choose username", self)
+        self.username_label.setGeometry(250, 140, 130, 40)
 
+        self.username_color_warning_label = QLabel("", self)
+        self.username_color_warning_label.setGeometry(125, 50, 280, 20)
+
+        self.username_qline = QLineEdit(self)
+        self.username_qline.setGeometry(400, 140, 130, 40)
+
+        self.username_warning = QLabel(f"", self)
+        self.username_warning.setGeometry(250, 80, 200, 20)
+
+        self.username_accept = QPushButton(f"OK", self)
+        self.username_accept.setGeometry(550, 140, 40, 40)
+        self.username_accept.clicked.connect(self.accept_username)
+
+        self.color = QPushButton("Username Color", self)
+        self.color.setGeometry(100, 140, 140, 40)
+        self.color.clicked.connect(self.choose_color)
+
+        self.color.setStyleSheet(
+            """
+            QPushButton {
+                color: #75a154; 
+                background-color: #2a6b48;
+                border: 2px solid #45814e;
+                border-radius: 20px;
+                font-size: 15px;
+            
+            }            
+            QPushButton:hover {
+                color: #9ab657;
+            }
+            """
+        )
+
+        self.username_label.setStyleSheet(
+            """
+            QLabel {
+                color: #75a154; 
+                background-color: #2a6b48;
+                border: 2px solid #45814e;
+                border-radius: 20px;
+                font-size: 15px;
+
+            }
+
+            """
+        )
+
+        self.username_qline.setStyleSheet(
+            """
+            QLineEdit {
+                color: #75a154; 
+                background-color: #2a6b48;
+                border: 2px solid #45814e;
+                border-radius: 20px;
+                font-size: 15px;
+                font-weight: bold;
+
+            }
+
+            """
+        )
+
+        self.username_accept.setStyleSheet(
+            """
+            QPushButton {
+                color: #75a154; 
+                background-color: #2a6b48;
+                border: 2px solid #45814e;
+                border-radius: 20px;
+                font-size: 15px;
+            
+            }            
+            QPushButton:hover {
+                color: #9ab657;
+            }
+            """
+        )
         self.user_down_line = QFrame(self)
         self.user_down_line.setFrameShape(QFrame.HLine)
         self.user_down_line.setFrameShadow(QFrame.Sunken)
         self.user_down_line.setGeometry(2, 70, 594, 10)
         self.user_down_line.setLineWidth(4)
         self.user_down_line.setStyleSheet("background-color: #61c7a2")
-        self.setStyleSheet("background-color: #135440")
-
 
     def audio_options(self):
 
         self.audio_label = QLabel("Audio", self)
-        self.audio_label.setGeometry(260, 10, 80, 30)
+        self.audio_label.setGeometry(260, 10, 90, 30)
         self.audio_label.setStyleSheet(
-            "font-size: 25px; font-weight: bold; background-color: #70e5ba; color: #ffffff; border: 3px solid #61c7a2; border-radius: 10px;"
+            "font-size: 25px; font-weight: bold; background-color: #70e5ba; color: #ffffff; border: 3px solid #61c7a2; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px;"
         )
         self.audio_label.setAlignment(QtCore.Qt.AlignCenter)
 
         self.music_label = QLabel("Music", self)
-        self.music_label.setGeometry(18, 26, 100, 20)
+        self.music_label.setGeometry(18, 24, 100, 20)
         self.music_label.setStyleSheet("font-size: 15px; color: #75a154; ")
 
         self.music = QSlider(Qt.Orientation.Horizontal, self)
@@ -146,22 +191,134 @@ class Options(QtWidgets.QTabWidget):
             "font-size: 15px; color: #75a154; text-align:right;"
         )
 
-
         self.audio_up_line = QFrame(self)
         self.audio_up_line.setFrameShape(QFrame.HLine)
         self.audio_up_line.setFrameShadow(QFrame.Sunken)
         self.audio_up_line.setGeometry(2, 2, 594, 10)
         self.audio_up_line.setLineWidth(4)
         self.audio_up_line.setStyleSheet("background-color: #61c7a2")
-        self.setStyleSheet("background-color: #135440")
+
+    def difficulty_options(self):
+
+        self.difficulty_label = QLabel("Difficulty", self)
+        self.difficulty_label.setGeometry(2, 218, 130, 35)
+        self.difficulty_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.difficulty_label.setStyleSheet(
+            "font-size: 25px; font-weight: bold; color: #ffffff; border: 3px solid #61c7a2; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; background-color: #70e5ba;"
+        )
+
+        self.choosed_difficulty_label = QLabel("Medium", self)
+        self.choosed_difficulty_label.setGeometry(129, 218, 130, 35)
+        self.choosed_difficulty_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.choosed_difficulty_label.setStyleSheet(
+            "font-size: 25px; font-weight: bold; color: #ffffff; border: 3px solid #61c7a2; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; background-color: #70e5ba;"
+        )
+
+        self.easy_difficulty = QPushButton("Easy", self)
+        self.easy_difficulty.setGeometry(100, 298, 130, 45)
+        self.easy_difficulty.clicked.connect(self.set_difficulty)
+
+        self.medium_difficulty = QPushButton("Medium", self)
+        self.medium_difficulty.setGeometry(250, 298, 130, 45)
+        self.medium_difficulty.clicked.connect(self.set_difficulty)
+
+        self.hard_difficulty = QPushButton("Hard", self)
+        self.hard_difficulty.setGeometry(400, 298, 130, 45)
+        self.hard_difficulty.clicked.connect(self.set_difficulty)
+        self.difficulty_down_line = QFrame(self)
+
+        self.difficulty_down_line.setFrameShape(QFrame.HLine)
+        self.difficulty_down_line.setFrameShadow(QFrame.Sunken)
+        self.difficulty_down_line.setGeometry(2, 210, 594, 10)
+        self.difficulty_down_line.setLineWidth(4)
+        self.difficulty_down_line.setStyleSheet("background-color: #61c7a2")
+
+        self.easy_difficulty.setStyleSheet(
+            """
+            QPushButton {
+                color: #aae566; 
+                background-color: #2a6b48;
+                border: 2px solid #45814e;
+                border-radius: 20px;
+                font-size: 15px;
+                font-weight: bold;
+
+            }
+            QPushButton:hover {
+                color: #9ab657;
+
+            }
+
+            """
+        )
+        self.medium_difficulty.setStyleSheet(
+            """
+            QPushButton {
+                color: #f6ff66; 
+                background-color: #2a6b48;
+                border: 2px solid #45814e;
+                border-radius: 20px;
+                font-size: 15px;
+                font-weight: bold;
+
+            }
+            QPushButton:hover {
+                color: #9ab657;
+
+            }
+
+            """
+        )
+        self.hard_difficulty.setStyleSheet(
+            """
+            QPushButton {
+                color: #ff5c58; 
+                background-color: #2a6b48;
+                border: 2px solid #45814e;
+                border-radius: 20px;
+                font-size: 15px;
+                font-weight: bold;
+
+            }
+            QPushButton:hover {
+                color: #9ab657;
+
+            }
+
+
+            """
+        )
+
+    def set_difficulty(self):
+        sender = self.sender()
+        if sender.text() == "Easy":
+            print("Easy")
+
+            print(self.choosed_difficulty_label.styleSheet())
+
+            self.choosed_difficulty_label.setText("Easy")
+
+            print(self.choosed_difficulty_label.styleSheet())
+
+        elif sender.text() == "Medium":
+            self.choosed_difficulty_label.setText("Medium")
+        elif sender.text() == "Hard":
+            self.choosed_difficulty_label.setText("Hard")
 
     def back_to_menu(self):
-        user = self.username.text()
-        save = {"username": user}
+        new_username = self.username_qline.text()
+        self.username_warning.setText(new_username)
 
-        self.menu_back = AimMenu.Menu(save)
-        self.menu_back.show()
-        self.close()
+        user = self.username_warning.text()
+        if self.username_warning.text() == "":
+            print("Please enter username")
+            self.username_warning.setText('You must enter username!')
+        else:
+            save = {"username": user}
+            
+            self.menu_back = AimMenu.Menu(save)
+            self.menu_back.show()
+            self.close()
 
     def choose_color(self):
         color_v_counter = 0
@@ -195,9 +352,14 @@ class Options(QtWidgets.QTabWidget):
     def sound_value(self):
         self.sound_number_label.setText(str(self.sound.value() + 1))
 
-    def change_username(self):
+    def accept_username(self):
         new_username = self.username_qline.text()
-        self.username.setText(new_username)
+        if self.username_qline.text() != "":
+            self.username_label.setText(new_username)
+            self.username_warning.setText("")
+        else:
+            self.username_warning.setText("Entered name cannot be blank")
+            self.username_warning.setStyleSheet("color: #ff5c58;")
 
 
 if __name__ == "__main__":
