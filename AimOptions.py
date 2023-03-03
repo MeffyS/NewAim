@@ -59,7 +59,7 @@ class Options(QtWidgets.QTabWidget):
         )
         self.user_label.setAlignment(QtCore.Qt.AlignCenter)
 
-        self.username_label = QLabel("Choose username", self)
+        self.username_label = QLabel("Choose Username", self)
         self.username_label.setGeometry(250, 140, 130, 40)
 
         self.username_color_warning_label = QLabel("", self)
@@ -149,18 +149,18 @@ class Options(QtWidgets.QTabWidget):
     def audio_options(self):
 
         self.audio_label = QLabel("Audio", self)
-        self.audio_label.setGeometry(260, 10, 90, 30)
+        self.audio_label.setGeometry(2, 10, 90, 30)
         self.audio_label.setStyleSheet(
             "font-size: 25px; font-weight: bold; background-color: #70e5ba; color: #ffffff; border: 3px solid #61c7a2; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px;"
         )
         self.audio_label.setAlignment(QtCore.Qt.AlignCenter)
 
         self.music_label = QLabel("Music", self)
-        self.music_label.setGeometry(18, 24, 100, 20)
+        self.music_label.setGeometry(415, 34, 100, 20)
         self.music_label.setStyleSheet("font-size: 15px; color: #75a154; ")
 
         self.music = QSlider(Qt.Orientation.Horizontal, self)
-        self.music.setGeometry(60, 30, 100, 10)
+        self.music.setGeometry(460, 40, 100, 10)
         self.music.setValue(50)
         self.music.valueChanged.connect(self.music_value)
         self.music.setStyleSheet(
@@ -168,17 +168,17 @@ class Options(QtWidgets.QTabWidget):
         )
 
         self.music_number_label = QLabel("50", self)
-        self.music_number_label.setGeometry(165, 24, 25, 20)
+        self.music_number_label.setGeometry(565, 34, 25, 20)
         self.music_number_label.setStyleSheet(
             "font-size: 15px; color: #75a154; text-align:right;"
         )
 
         self.sound_label = QLabel("Sound", self)
-        self.sound_label.setGeometry(415, 24, 100, 20)
+        self.sound_label.setGeometry(415, 14, 100, 20)
         self.sound_label.setStyleSheet("font-size: 15px; color: #75a154; ")
 
         self.sound = QSlider(Qt.Orientation.Horizontal, self)
-        self.sound.setGeometry(460, 30, 100, 10)
+        self.sound.setGeometry(460, 20, 100, 10)
         self.sound.setValue(50)
         self.sound.valueChanged.connect(self.sound_value)
         self.sound.setStyleSheet(
@@ -186,7 +186,7 @@ class Options(QtWidgets.QTabWidget):
         )
 
         self.sound_number_label = QLabel("50", self)
-        self.sound_number_label.setGeometry(565, 24, 25, 20)
+        self.sound_number_label.setGeometry(565, 14, 25, 20)
         self.sound_number_label.setStyleSheet(
             "font-size: 15px; color: #75a154; text-align:right;"
         )
@@ -306,16 +306,16 @@ class Options(QtWidgets.QTabWidget):
             self.choosed_difficulty_label.setText("Hard")
 
     def back_to_menu(self):
-        new_username = self.username_qline.text()
-        self.username_warning.setText(new_username)
 
-        user = self.username_warning.text()
-        if self.username_warning.text() == "":
-            print("Please enter username")
-            self.username_warning.setText('You must enter username!')
+        user = self.username_label.text()
+
+        if self.username_label.text() in ("Choose Username", ""):
+            self.username_warning.setText("You must enter username!")
+            self.username_warning.setStyleSheet("color: #ff5c58;")
+
         else:
-            save = {"username": user}
-            
+            save = {"username": user.capitalize()}
+
             self.menu_back = AimMenu.Menu(save)
             self.menu_back.show()
             self.close()
@@ -324,27 +324,28 @@ class Options(QtWidgets.QTabWidget):
         color_v_counter = 0
         self.color = QColorDialog.getColor()
 
-        self.username.setStyleSheet(
-            f"color: rgb({QColor.getRgb(self.color)[0]}, {QColor.getRgb(self.color)[1]}, {QColor.getRgb(self.color)[2]})"
-        )
-        for color_v in list(QColor.getRgb(self.color)):
-            print(color_v)
-            if color_v_counter < 3:
-                if color_v > 220:
-                    color_v_counter += 1
-                    continue
-            if color_v_counter == 3:
-                self.username.setStyleSheet(f"color: rgb({0}, {0}, {0})")
-                self.username_color_warning_label.setText(
-                    "Your color cannot be in white hue"
-                )
-                self.username_color_warning_label.setStyleSheet(
-                    f"color: rgb({255}, {0}, {0})"
-                )
-            else:
-                self.username_color_warning_label.setStyleSheet(
-                    f"color: rgb({255}, {255}, {255})"
-                )
+        # self.username_warning.setStyleSheet(
+        #     f"color: rgb({QColor.getRgb(self.color)[0]}, {QColor.getRgb(self.color)[1]}, {QColor.getRgb(self.color)[2]})"
+        # )
+
+        # for color_v in list(QColor.getRgb(self.color)):
+        #     print(color_v)
+        #     if color_v_counter < 3:
+        #         if color_v > 220:
+        #             color_v_counter += 1
+        #             continue
+        #     if color_v_counter == 3:
+        #         self.username_warning.setStyleSheet(f"color: rgb({0}, {0}, {0})")
+        #         self.username_color_warning_label.setText(
+        #             "Your color cannot be in white hue"
+        #         )
+        #         self.username_color_warning_label.setStyleSheet(
+        #             f"color: rgb({255}, {0}, {0})"
+        #         )
+        #     else:
+        #         self.username_color_warning_label.setStyleSheet(
+        #             f"color: rgb({255}, {255}, {255})"
+        #         )
 
     def music_value(self):
         self.music_number_label.setText(str(self.music.value() + 1))
@@ -353,10 +354,16 @@ class Options(QtWidgets.QTabWidget):
         self.sound_number_label.setText(str(self.sound.value() + 1))
 
     def accept_username(self):
-        new_username = self.username_qline.text()
-        if self.username_qline.text() != "":
-            self.username_label.setText(new_username)
+        if (
+            self.username_qline.text() not in ("Choose Username", "")
+            and len(self.username_qline.text()) <= 16
+            and len(self.username_qline.text()) > 0
+        ):
+            self.username_label.setText(self.username_qline.text())
             self.username_warning.setText("")
+        elif len(self.username_label.text()) > 16:
+            self.username_warning.setText("Entered cannot be higher than 16")
+            self.username_warning.setStyleSheet("color: #ff5c58;")
         else:
             self.username_warning.setText("Entered name cannot be blank")
             self.username_warning.setStyleSheet("color: #ff5c58;")
