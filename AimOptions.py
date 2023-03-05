@@ -290,6 +290,7 @@ class Options(QtWidgets.QTabWidget):
         )
 
     def set_difficulty(self):
+        
         sender = self.sender()
         if sender.text() == "Easy":
             print("Easy")
