@@ -8,10 +8,11 @@ import time
 from PySide6.QtCore import QUrl
 from PySide6.QtMultimedia import QSoundEffect
 
-from PySide6.QtCore import QTimer, Slot, QDateTime, QElapsedTimer
+from PySide6.QtCore import QTimer, Slot, QDateTime, QElapsedTimer, Qt
 from PySide6 import QtWidgets, QtMultimedia
 from PySide6.QtWidgets import QApplication, QPushButton, QLabel
 from PySide6.QtGui import QPixmap, QCursor
+from PySide6.QtTest import QTest
 
 from abc import ABC
 import AimLevels
@@ -71,7 +72,10 @@ class Play(QtWidgets.QWidget):
 
         self.obj_first.setParent(self)
 
-        self.obj_first.clicked.connect(self.clicked_button_change_position)
+        self.obj_first.setAutoRepeat(False)
+
+        self.obj_first.pressed.connect(self.clicked_button_change_position)
+        self.obj_first.setAutoExclusive(False)
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.no_clicked_button_change_position)
@@ -86,6 +90,7 @@ class Play(QtWidgets.QWidget):
         self.start_time = QDateTime.currentDateTime()
 
     def no_clicked_button_change_position(self):
+
         self.fail_effect.play()
         self.remove_points()
         self.miss_points()
@@ -100,6 +105,9 @@ class Play(QtWidgets.QWidget):
         )
 
     def clicked_button_change_position(self):
+
+        QTest.mouseRelease(self.obj_first, Qt.LeftButton)
+
         self.hit_effect.play()
         self.add_points()
         self.hit_points()
@@ -112,7 +120,6 @@ class Play(QtWidgets.QWidget):
             self.obj_first.o_width,
             self.obj_first.o_height,
         )
-        
 
     def update_time_label(self):
 
