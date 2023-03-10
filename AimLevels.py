@@ -8,7 +8,7 @@ class AimLevel(ABC):
         money=0,
         min_points=0,
         max_points=25,
-        change_speed=400,
+        change_speed=5,
         hearts=4,
         points_counter=1,
     ):
@@ -45,7 +45,7 @@ class Level_1(AimLevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.level = 1
-        self.change_speed = 400
+        self.change_speed = 50
 
     def money_converter(self):
         pass
@@ -196,20 +196,21 @@ def points_checker(points):
     levels = {
         "Level_0()": [0, 10],
         "Level_1()": [11, 20],
-        'Level_2()':[21,30],
-        'Level_3()':[31,40],
-        'Level_4()':[41,50],
-        'Level_5()':[51,60],
-        'Level_6()':[61,70],
-        'Level_7()':[71,80],
-        'Level_8()':[81,90],
-        'Level_9()':[91,100],
-        'Level_10()':[101,110]
+        "Level_2()": [21, 30],
+        "Level_3()": [31, 40],
+        "Level_4()": [41, 50],
+        "Level_5()": [51, 60],
+        "Level_6()": [61, 70],
+        "Level_7()": [71, 80],
+        "Level_8()": [81, 90],
+        "Level_9()": [91, 100],
+        "Level_10()": [101, 110],
     }
     for level, determinant in levels.items():
         if determinant[0] <= points and determinant[1] >= points:
             a_level = eval(level)
     return a_level
+
 
 a = points_checker(120)
 print(a.level)

@@ -13,23 +13,29 @@ from PySide6 import QtWidgets, QtMultimedia
 from PySide6.QtWidgets import QApplication, QPushButton, QLabel
 from PySide6.QtGui import QPixmap, QCursor
 from PySide6.QtTest import QTest
+from PySide6 import QtGui
+from PySide6.QtGui import QKeySequence, QShortcut
 
 from abc import ABC
 import AimLevels
 
 
 class Play(QtWidgets.QWidget):
-    def __init__(self):
-        super().__init__()
-
-        self.hearts()
-        self.setFixedSize(1280, 800)
-        # self.setCursor(QCursor(ClosedHandCursor))
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
 
         self.aim_seconds = 0
         self.points = 0
         self.hit_points_value = 0
         self.miss_points_value = 0
+        self.health_value = 5
+
+        self.setFixedSize(1280, 800)
+
+        self.hearts()
+
+        self.heart_count_label = QLabel(str(self.health_value), self)
+        self.heart_count_label.setGeometry(350, 2, 50, 50)
 
         self.aim_timer_seconds = QLabel("0", self)
         self.aim_timer_seconds.setGeometry(145, 15, 300, 25)
@@ -71,11 +77,11 @@ class Play(QtWidgets.QWidget):
         )
 
         self.obj_first.setParent(self)
-
         self.obj_first.setAutoRepeat(False)
 
         self.obj_first.pressed.connect(self.clicked_button_change_position)
         self.obj_first.setAutoExclusive(False)
+        self.obj_first.setFocusPolicy(Qt.NoFocus)
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.no_clicked_button_change_position)
@@ -104,8 +110,9 @@ class Play(QtWidgets.QWidget):
             self.obj_first.o_height,
         )
 
-    def clicked_button_change_position(self):
+        self.hearts_remove()
 
+    def clicked_button_change_position(self):
         QTest.mouseRelease(self.obj_first, Qt.LeftButton)
 
         self.hit_effect.play()
@@ -133,14 +140,15 @@ class Play(QtWidgets.QWidget):
         )
 
     def hearts(self):
-        hearts_list = ["Heart_1", "Heart_2", "Heart_3", "Heart_4"]
-        for position, heart in enumerate(hearts_list):
-            self.heart_label = QLabel("", self)
-            self.heart_label.setGeometry(350 + 40 * position, -10, 80, 80)
-            self.heart_label_pixmap = QPixmap("Aim_icons/heart.png")
-            self.heart_label_pixmap = self.heart_label_pixmap.scaled(40, 40)
-            self.heart_label.setPixmap(self.heart_label_pixmap)
-            setattr(self, heart, self.heart_label)
+        self.heart_label = QLabel("a", self)
+        self.heart_label.setGeometry(300, 2, 50, 50)
+        self.heart_label.setStyleSheet("font-size: 25px;")
+        self.heart_label_pixmap = QPixmap("Aim_icons/heart.png")
+        self.heart_label_pixmap = self.heart_label_pixmap.scaled(40, 40)
+        self.heart_label.setPixmap(self.heart_label_pixmap)
+
+        self.heart_count_label = QLabel("", self)
+        self.heart_count_label.setGeometry(350, 2, 50, 50)
 
     def add_points(self):
         self.timer.start(10000)
@@ -161,8 +169,38 @@ class Play(QtWidgets.QWidget):
         self.hit_object_label.setText(f"Hit: {self.hit_points_value}")
 
     def miss_points(self):
+
         self.miss_points_value += 1
         self.miss_object_label.setText(f"Miss: {self.miss_points_value}")
+
+    def hearts_remove(self):
+        self.new_heart_count = 5
+
+        heart = {
+            5: [0, 100],
+            4: [101, 200],
+            3: [201, 300],
+            2: [301, 400],
+            1: [401, 500],
+            0: [501, 600],
+        }
+
+        for x, y in heart.items():
+            if self.miss_points_value > 600:
+                sys.exit()
+            if self.miss_points_value >= y[0] and self.miss_points_value <= y[1]:
+                print(x)
+
+                self.heart_count_label.setText(str(x))
+
+            if self.new_heart_count <= x:
+                self.new_heart_count = x
+
+    def ignore_buttons(self, event):
+        if event.key() == Qt.Key_Space:
+            event.ignore()
+        else:
+            super().keyPressEvent(event)
 
 
 class AimObject(QtWidgets.QPushButton):
