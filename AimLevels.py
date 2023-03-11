@@ -8,7 +8,7 @@ class AimLevel(ABC):
         money=0,
         min_points=0,
         max_points=25,
-        change_speed=5,
+        change_speed=5555,
         hearts=4,
         points_counter=1,
     ):
@@ -45,7 +45,7 @@ class Level_1(AimLevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.level = 1
-        self.change_speed = 50
+        self.change_speed = 5000
 
     def money_converter(self):
         pass
@@ -60,7 +60,7 @@ class Level_2(AimLevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.level = 2
-        self.change_speed = 400
+        self.change_speed = 4000
 
     def money_converter(self):
         pass
@@ -75,7 +75,7 @@ class Level_3(AimLevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.level = 3
-        self.change_speed = 400
+        self.change_speed = 4000
 
     def money_converter(self):
         pass
@@ -90,7 +90,7 @@ class Level_4(AimLevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.level = 4
-        self.change_speed = 400
+        self.change_speed = 4000
 
     def money_converter(self):
         pass
@@ -105,7 +105,7 @@ class Level_5(AimLevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.level = 5
-        self.change_speed = 400
+        self.change_speed = 4000
 
     def money_converter(self):
         pass
@@ -120,7 +120,7 @@ class Level_6(AimLevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.level = 6
-        self.change_speed = 400
+        self.change_speed = 4000
 
     def money_converter(self):
         pass
