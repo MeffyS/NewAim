@@ -8,7 +8,7 @@ class AimLevel(ABC):
         money=0,
         min_points=0,
         max_points=25,
-        change_speed=5555,
+        change_speed=1000,
         hearts=4,
         points_counter=1,
     ):

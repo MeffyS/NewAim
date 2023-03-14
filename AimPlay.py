@@ -5,15 +5,13 @@ import random
 from PySide6.QtCore import QUrl
 from PySide6.QtMultimedia import QSoundEffect
 
-from PySide6.QtCore import QTimer, Slot, QDateTime, QElapsedTimer, Qt
-from PySide6 import QtWidgets, QtMultimedia
-from PySide6.QtWidgets import QApplication, QPushButton, QLabel, QLineEdit, QFrame
-from PySide6.QtGui import QPixmap, QCursor
+from PySide6.QtCore import QTimer, QDateTime, QElapsedTimer, Qt
+from PySide6 import QtWidgets
+from PySide6.QtWidgets import QLabel, QFrame
+from PySide6.QtGui import QPixmap
 from PySide6.QtTest import QTest
-from PySide6 import QtGui
 
 
-from abc import ABC
 import AimLevels
 
 
@@ -25,6 +23,9 @@ class Play(QtWidgets.QWidget):
 
         self.aim_seconds = 0
         self.points = 0
+        self.combo_points_counter = 0
+        self.combo_points = 0
+        self.combo_high = 0
         self.hit_points_value = 0
         self.miss_points_value = 0
         self.health_value = 5
@@ -52,6 +53,14 @@ class Play(QtWidgets.QWidget):
         self.aim_points = QLabel(f"Points: {self.points}", self)
         self.aim_points.setGeometry(525, 15, 130, 25)
         self.aim_points.setStyleSheet("font-size: 25px;")
+
+        self.aim_combo = QLabel(f"Combo:  {self.combo_points}", self)
+        self.aim_combo.setGeometry(725, 5, 130, 25)
+        self.aim_combo.setStyleSheet("font-size: 15px;")
+
+        self.high_aim_combo = QLabel(f"HIGH Combo: {self.combo_high}", self)
+        self.high_aim_combo.setGeometry(725, 30, 130, 15)
+        self.high_aim_combo.setStyleSheet("font-size: 15px;")
 
         self.hit_object_label = QLabel(f"Hit: {self.hit_points_value}", self)
         self.hit_object_label.setGeometry(1070, 15, 300, 25)
@@ -123,6 +132,7 @@ class Play(QtWidgets.QWidget):
         self.fail_effect.play()
         self.remove_points()
         self.miss_points()
+        self.set_high_combo()
 
         self.new_position_x = random.randint(100, 1150)
         self.new_position_y = random.randint(100, 850)
@@ -141,6 +151,7 @@ class Play(QtWidgets.QWidget):
         self.hit_effect.play()
         self.add_points()
         self.hit_points()
+        self.combo_result()
 
         self.new_position_x = random.randint(70, 1100)
         self.new_position_y = random.randint(70, 850)
@@ -150,8 +161,6 @@ class Play(QtWidgets.QWidget):
             self.obj_first.o_width,
             self.obj_first.o_height,
         )
-        print(self.new_position_x)
-        print(self.new_position_y)
 
     def update_time_label(self):
 
@@ -185,6 +194,9 @@ class Play(QtWidgets.QWidget):
         self.new_level = AimLevels.points_checker(self.points)
         self.aim_level.setText(str(self.new_level.level))
         self.timer.start(self.new_level.change_speed)
+
+        # COMBO POINTS
+        self.combo_points_counter += 1
 
     def remove_points(self):
         self.points -= 1
@@ -229,6 +241,19 @@ class Play(QtWidgets.QWidget):
             event.ignore()
         else:
             super().keyPressEvent(event)
+
+    def combo_result(self):
+        self.aim_combo.setText(f"Combo: {self.combo_points_counter}")
+
+    def set_high_combo(self):
+
+        if self.combo_points_counter >= self.combo_high:
+            self.combo_high = self.combo_points_counter
+            self.high_aim_combo.setText(f"HIGH Combo: {self.combo_high}")
+        self.combo_points_counter = 0
+        self.aim_combo.setText(f"Combo: {str(0)}")
+
+
 
 
 class AimObject(QtWidgets.QPushButton):
