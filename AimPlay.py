@@ -147,11 +147,13 @@ class Play(QtWidgets.QWidget):
 
     def clicked_button_change_position(self):
         QTest.mouseRelease(self.obj_first, Qt.LeftButton)
+        # self.obj_first = AimObject(600, 600, 150, 150, "obj_1", 5)
 
         self.hit_effect.play()
         self.add_points()
         self.hit_points()
         self.combo_result()
+        self.set_attributes()
 
         self.new_position_x = random.randint(70, 1100)
         self.new_position_y = random.randint(70, 850)
@@ -188,7 +190,6 @@ class Play(QtWidgets.QWidget):
         self.heart_count_label.setGeometry(350, 2, 50, 50)
 
     def add_points(self):
-        self.timer.start(10000)
         self.points += 1
         self.aim_points.setText(f"Points: {self.points}")
         self.new_level = AimLevels.points_checker(self.points)
@@ -229,7 +230,6 @@ class Play(QtWidgets.QWidget):
             if self.miss_points_value > 600:
                 sys.exit()
             if self.miss_points_value >= y[0] and self.miss_points_value <= y[1]:
-                print(x)
 
                 self.heart_count_label.setText(str(x))
 
@@ -253,6 +253,13 @@ class Play(QtWidgets.QWidget):
         self.combo_points_counter = 0
         self.aim_combo.setText(f"Combo: {str(0)}")
 
+    def set_attributes(self):
+
+        self.level_options = AimLevels.set_level_attributes(self.points)
+
+        if int(self.aim_level.text()) == self.level_options.level:
+            self.obj_first.o_height = self.level_options.object_height
+            self.obj_first.o_width = self.level_options.object_width
 
 
 
