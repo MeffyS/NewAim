@@ -70,7 +70,6 @@ class Play(QtWidgets.QWidget):
         self.miss_object_label.setGeometry(1170, 15, 300, 25)
         self.miss_object_label.setStyleSheet("font-size: 25px;")
 
-
         self.hit_effect = QSoundEffect(self)
         self.hit_effect.setSource(QUrl.fromLocalFile("Aim_audio/punch.wav"))
 
@@ -119,7 +118,7 @@ class Play(QtWidgets.QWidget):
                 color: #75a154; 
                 background-color: #2a6b48;
                 border: 2px solid #45814e;
-                border-radius: 25px;
+                border-radius: 120px;
 
             }
             QPushButton:hover {
@@ -262,25 +261,29 @@ class Play(QtWidgets.QWidget):
 
         START_X_AND_Y = 70
 
-
-
-        
-
         if int(self.aim_level.text()) == self.level_options.level:
 
             self.level_border_x = int(self.level_options.border_x)
             self.level_border_y = int(self.level_options.border_y)
             self.obj_first.o_height = self.level_options.object_height
             self.obj_first.o_width = self.level_options.object_width
-            print(self.level_border_x,self.level_border_y)
-            
+            print(self.level_border_x, self.level_border_y)
+
             self.new_position_x = random.randint(START_X_AND_Y, self.level_border_x)
             self.new_position_y = random.randint(START_X_AND_Y, self.level_border_y)
- 
-
-
-
-
+            self.obj_first.setStyleSheet(
+                f"""
+                QPushButton {{
+                    color: #75a154; 
+                    background-color: #2a6b48;
+                    border: 2px solid #45814e;
+                    border-radius: {self.level_options.object_height//2}px;
+                }}
+                QPushButton:hover {{
+                    color: #9ab657;
+                }}
+                """
+            )
 
 
 class AimObject(QtWidgets.QPushButton):
