@@ -70,13 +70,14 @@ class Play(QtWidgets.QWidget):
         self.miss_object_label.setGeometry(1170, 15, 300, 25)
         self.miss_object_label.setStyleSheet("font-size: 25px;")
 
-        self.obj_first = AimObject(600, 600, 150, 150, "obj_1", 5)
 
         self.hit_effect = QSoundEffect(self)
         self.hit_effect.setSource(QUrl.fromLocalFile("Aim_audio/punch.wav"))
 
         self.fail_effect = QSoundEffect(self)
         self.fail_effect.setSource(QUrl.fromLocalFile("Aim_audio/fail_sound.wav"))
+
+        self.obj_first = AimObject(600, 600, 250, 250, "obj_1", 5)
 
         self.obj_first.setGeometry(
             self.obj_first.position_x,
@@ -133,9 +134,10 @@ class Play(QtWidgets.QWidget):
         self.remove_points()
         self.miss_points()
         self.set_high_combo()
+        self.set_attributes()
 
-        self.new_position_x = random.randint(100, 1150)
-        self.new_position_y = random.randint(100, 850)
+        # self.new_position_x = random.randint(70, 1150)
+        # self.new_position_y = random.randint(70, 850)
         self.obj_first.setGeometry(
             self.new_position_x,
             self.new_position_y,
@@ -146,8 +148,10 @@ class Play(QtWidgets.QWidget):
         self.hearts_remove()
 
     def clicked_button_change_position(self):
+        button_size = self.obj_first.sizeHint()
+        print(button_size.width())
+        print(button_size.height())
         QTest.mouseRelease(self.obj_first, Qt.LeftButton)
-        # self.obj_first = AimObject(600, 600, 150, 150, "obj_1", 5)
 
         self.hit_effect.play()
         self.add_points()
@@ -155,8 +159,8 @@ class Play(QtWidgets.QWidget):
         self.combo_result()
         self.set_attributes()
 
-        self.new_position_x = random.randint(70, 1100)
-        self.new_position_y = random.randint(70, 850)
+        # self.new_position_x = random.randint(70, 1100)
+        # self.new_position_y = random.randint(70, 850)
         self.obj_first.setGeometry(
             self.new_position_x,
             self.new_position_y,
@@ -254,12 +258,28 @@ class Play(QtWidgets.QWidget):
         self.aim_combo.setText(f"Combo: {str(0)}")
 
     def set_attributes(self):
-
         self.level_options = AimLevels.set_level_attributes(self.points)
 
+        START_X_AND_Y = 70
+
+
+
+        
+
         if int(self.aim_level.text()) == self.level_options.level:
+
+            self.level_border_x = int(self.level_options.border_x)
+            self.level_border_y = int(self.level_options.border_y)
             self.obj_first.o_height = self.level_options.object_height
             self.obj_first.o_width = self.level_options.object_width
+            print(self.level_border_x,self.level_border_y)
+            
+            self.new_position_x = random.randint(START_X_AND_Y, self.level_border_x)
+            self.new_position_y = random.randint(START_X_AND_Y, self.level_border_y)
+ 
+
+
+
 
 
 
