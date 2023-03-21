@@ -6,11 +6,15 @@ from PySide6 import QtWidgets
 from PySide6.QtWidgets import QPushButton
 from PySide6.QtGui import QIcon
 
+
+import AimPlay
 import AimIntroduction
 
 class Lobby(QtWidgets.QWidget):
-    def __init__(self):
+    def __init__(self,save):
         super().__init__()
+        self.save = save
+        print('save',save)
 
         self.setGeometry(100, 100, 1200, 1200)
 
@@ -62,6 +66,8 @@ class Lobby(QtWidgets.QWidget):
         )
     
     def aim_play(self):
+        self.play = AimPlay.Play(self.save)
+        self.play.show()
         self.close()
         
 
@@ -74,7 +80,7 @@ class Lobby(QtWidgets.QWidget):
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
 
-    aim_lobby = Lobby()
+    aim_lobby = Lobby('')
 
     aim_lobby.resize(800, 600)
     aim_lobby.show()

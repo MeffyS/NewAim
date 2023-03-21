@@ -1,5 +1,6 @@
 import sys
 import random
+import os
 
 
 from PySide6.QtCore import QUrl
@@ -16,8 +17,9 @@ import AimLevels
 
 
 class Play(QtWidgets.QWidget):
-    def __init__(self):
+    def __init__(self, save):
         super().__init__()
+        self.save = save
 
         self.setStyleSheet("background-color: #135440; color: #75a154; ")
 
@@ -42,7 +44,14 @@ class Play(QtWidgets.QWidget):
         self.aim_timer_seconds.setGeometry(145, 15, 90, 25)
         self.aim_timer_seconds.setStyleSheet("font-size: 25px;")
 
-        self.aim_username = QLabel("Username", self)
+        try:
+            # self.aim_username.setText(f'{save["username"]}')
+            self.waim_username = QLabel(f'{save["username"]}', self)
+
+        except Exception:
+            # self.aim_username.setText(f'{save["username"]}')
+            self.aim_username = QLabel(f"{os.getlogin()}", self)
+
         self.aim_username.setGeometry(15, 15, 130, 25)
         self.aim_username.setStyleSheet("font-size: 25px;")
 
@@ -74,7 +83,9 @@ class Play(QtWidgets.QWidget):
         self.hit_effect.setSource(QUrl.fromLocalFile("Aim_audio/punch.wav"))
 
         self.fail_effect = QSoundEffect(self)
-        self.fail_effect.setSource(QUrl.fromLocalFile("Aim_audio/fail_sound.wav"))
+        self.fail_effect.setSource(
+            QUrl.fromLocalFile("Aim_audio/fail_sound.wav")
+        )
 
         self.obj_first = AimObject(600, 600, 250, 250, "obj_1", 5)
 
@@ -135,8 +146,6 @@ class Play(QtWidgets.QWidget):
         self.set_high_combo()
         self.set_attributes()
 
-        # self.new_position_x = random.randint(70, 1150)
-        # self.new_position_y = random.randint(70, 850)
         self.obj_first.setGeometry(
             self.new_position_x,
             self.new_position_y,
@@ -301,7 +310,7 @@ if __name__ == "__main__":
 
     app = QtWidgets.QApplication([])
 
-    aim_play = Play()
+    aim_play = Play("")
     aim_play.show()
 
     sys.exit(app.exec())

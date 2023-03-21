@@ -15,6 +15,7 @@ from PySide6.QtCore import Qt
 class Menu(QtWidgets.QWidget):
     def __init__(self, save):
         super().__init__()
+        self.save = save
 
         self.setFixedHeight(600)
         self.setFixedWidth(600)
@@ -113,9 +114,9 @@ class Menu(QtWidgets.QWidget):
         """
         )
 
-    def aim_start(self):
+    def aim_start(self,save):
         self.close()
-        self.aim_start = AimStart.Lobby()
+        self.aim_start = AimStart.Lobby(self.save)
         self.aim_start.show()
 
     def aim_options(self):
