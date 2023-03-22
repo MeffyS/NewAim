@@ -6,10 +6,10 @@ import os
 from PySide6.QtCore import QUrl
 from PySide6.QtMultimedia import QSoundEffect
 
-from PySide6.QtCore import QTimer, QDateTime, QElapsedTimer, Qt
+from PySide6.QtCore import QTimer, QDateTime, QElapsedTimer, Qt, QSize
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import QLabel, QFrame
-from PySide6.QtGui import QPixmap
+from PySide6.QtGui import QPixmap, QCursor, QIcon
 from PySide6.QtTest import QTest
 
 
@@ -20,6 +20,8 @@ class Play(QtWidgets.QWidget):
     def __init__(self, save):
         super().__init__()
         self.save = save
+
+        self.setCursor(QCursor(QPixmap("Aim_icons/axe.png")))
 
         self.setStyleSheet("background-color: #135440; color: #75a154; ")
 
@@ -83,9 +85,7 @@ class Play(QtWidgets.QWidget):
         self.hit_effect.setSource(QUrl.fromLocalFile("Aim_audio/punch.wav"))
 
         self.fail_effect = QSoundEffect(self)
-        self.fail_effect.setSource(
-            QUrl.fromLocalFile("Aim_audio/fail_sound.wav")
-        )
+        self.fail_effect.setSource(QUrl.fromLocalFile("Aim_audio/fail_sound.wav"))
 
         self.obj_first = AimObject(600, 600, 250, 250, "obj_1", 5)
 
@@ -94,6 +94,12 @@ class Play(QtWidgets.QWidget):
             self.obj_first.position_y,
             self.obj_first.o_width,
             self.obj_first.o_height,
+        )
+
+        self.obj_first.setCursor(QCursor(QPixmap("Aim_icons/axe_cursor.png")))
+        self.obj_first.setIcon(QIcon("aim_icons/shield.png"))
+        self.obj_first.setIconSize(
+            QSize(self.obj_first.o_width, self.obj_first.o_height)
         )
 
         self.obj_first.setParent(self)
@@ -277,6 +283,9 @@ class Play(QtWidgets.QWidget):
             self.obj_first.o_height = self.level_options.object_height
             self.obj_first.o_width = self.level_options.object_width
             print(self.level_border_x, self.level_border_y)
+            self.obj_first.setIconSize(
+                QSize(self.level_options.object_width, self.level_options.object_height)
+            )
 
             self.new_position_x = random.randint(START_X_AND_Y, self.level_border_x)
             self.new_position_y = random.randint(START_X_AND_Y, self.level_border_y)
