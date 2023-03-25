@@ -120,7 +120,7 @@ class Level_4(AimLevel):
         self.border_y = 790
 
     def money_converter(self):
-        return (self.level + 0) * 0.04
+        return ( 1* 0.04)
 
     def count_points(self):
         pass
@@ -139,7 +139,7 @@ class Level_5(AimLevel):
 
 
     def money_converter(self):
-        return (self.level + 0) * 0.05
+        return ( 1* 0.05)
 
 
     def count_points(self):
@@ -158,7 +158,7 @@ class Level_6(AimLevel):
         self.border_y = 810
 
     def money_converter(self):
-        return (self.level + 0) * 0.06
+        return ( 1* 0.06)
 
 
     def count_points(self):
@@ -178,7 +178,7 @@ class Level_7(AimLevel):
 
 
     def money_converter(self):
-        return (self.level + 0) * 0.07
+        return ( 1* 0.07)
 
 
     def count_points(self):
@@ -197,7 +197,7 @@ class Level_8(AimLevel):
         self.border_y = 830
 
     def money_converter(self):
-        return (self.level + 0) * 0.08
+        return ( 1* 0.08)
 
     def count_points(self):
         pass
@@ -215,7 +215,7 @@ class Level_9(AimLevel):
         self.border_y = 840
 
     def money_converter(self):
-        return (self.level + 0) * 0.09
+        return ( 1* 0.09)
 
 
     def count_points(self):
@@ -234,7 +234,7 @@ class Level_10(AimLevel):
         self.border_y = 850
 
     def money_converter(self):
-        return (self.level + 0) * 0.1
+        return ( 1* 0.1)
 
 
     def count_points(self):
@@ -252,7 +252,7 @@ class Level_11(AimLevel):
         self.border_y = 860
 
     def money_converter(self):
-        return (self.level + 0) * 0.11
+        return ( 1* 0.11)
 
 
     def count_points(self):
@@ -270,7 +270,7 @@ class Level_12(AimLevel):
         self.border_y = 870
 
     def money_converter(self):
-        return (self.level + 0) * 0.12
+        return ( 1* 0.12)
 
     def count_points(self):
         pass
@@ -287,7 +287,7 @@ class Level_13(AimLevel):
         self.border_y = 880
 
     def money_converter(self):
-        return (self.level + 0) * 0.13
+        return ( 1* 0.13)
 
 
     def count_points(self):
@@ -305,7 +305,7 @@ class Level_14(AimLevel):
         self.border_y = 890
 
     def money_converter(self):
-        return (self.level + 0) * 0.14
+        return ( 1* 0.14)
 
 
     def count_points(self):
@@ -323,7 +323,7 @@ class Level_15(AimLevel):
         self.border_y = 900
 
     def money_converter(self):
-        return (self.level + 0) * 0.15
+        return ( 1* 0.15)
 
 
     def count_points(self):
@@ -341,7 +341,7 @@ class Level_16(AimLevel):
         self.border_y = 905
 
     def money_converter(self):
-        return (self.level + 0) * 0.16
+        return ( 1* 0.16)
 
 
     def count_points(self):
@@ -359,7 +359,7 @@ class Level_17(AimLevel):
         self.border_y = 910
 
     def money_converter(self):
-        return (self.level + 0) * 0.17
+        return ( 1* 0.17)
 
 
     def count_points(self):
@@ -377,7 +377,7 @@ class Level_18(AimLevel):
         self.border_y = 915
 
     def money_converter(self):
-        return (self.level + 0) * 0.18
+        return ( 1* 0.18)
 
 
     def count_points(self):
@@ -395,7 +395,7 @@ class Level_19(AimLevel):
         self.border_y = 920
 
     def money_converter(self):
-        return (self.level + 0) * 0.19
+        return ( 1* 0.19)
 
 
     def count_points(self):
@@ -413,7 +413,7 @@ class Level_20(AimLevel):
         self.border_y = 925
 
     def money_converter(self):
-        return (self.level + 0) * 0.2
+        return ( 1.5* 0.2)
 
 
     def count_points(self):
@@ -431,7 +431,7 @@ class Level_21(AimLevel):
         self.border_y = 930
 
     def money_converter(self):
-        return (self.level + 0) * 0.21
+        return ( 1.5* 0.21)
 
 
     def count_points(self):
@@ -449,7 +449,7 @@ class Level_22(AimLevel):
         self.border_y = 935
 
     def money_converter(self):
-        return (self.level + 0) * 0.22
+        return ( 1.5* 0.22)
 
 
     def count_points(self):
@@ -467,7 +467,7 @@ class Level_23(AimLevel):
         self.border_y = 940
 
     def money_converter(self):
-        return (self.level + 0) * 0.23
+        return ( 1.5* 0.23)
 
 
     def count_points(self):
@@ -485,7 +485,7 @@ class Level_24(AimLevel):
         self.border_y = 945
 
     def money_converter(self):
-        return (self.level + 0) * 0.24
+        return ( 1.5* 0.24)
 
 
     def count_points(self):
@@ -503,7 +503,7 @@ class Level_25(AimLevel):
         self.border_y = 950
 
     def money_converter(self):
-        return (self.level + 0) * 0.25
+        return ( 1.5* 0.25)
  
 
     def count_points(self):
@@ -521,7 +521,7 @@ class Level_26(AimLevel):
         self.border_y = 955
 
     def money_converter(self):
-        return (self.level + 0) * 0.26
+        return ( 1.5* 0.26)
 
 
     def count_points(self):
@@ -539,7 +539,7 @@ class Level_27(AimLevel):
         self.border_y = 960
 
     def money_converter(self):
-        return (self.level + 0) * 0.27
+        return ( 1.5* 0.27)
 
 
     def count_points(self):
@@ -557,7 +557,7 @@ class Level_28(AimLevel):
         self.border_y = 965
 
     def money_converter(self):
-        return (self.level + 0) * 0.28
+        return ( 1.5* 0.28)
 
 
     def count_points(self):
@@ -575,7 +575,7 @@ class Level_29(AimLevel):
         self.border_y = 970
 
     def money_converter(self):
-        return (self.level + 0) * 0.29
+        return ( 1.5* 0.29)
 
 
     def count_points(self):
@@ -593,7 +593,7 @@ class Level_30(AimLevel):
         self.border_y = 975
 
     def money_converter(self):
-        return (self.level + 0) * 0.3
+        return ( 2* 0.3)
 
 
     def count_points(self):
@@ -611,7 +611,7 @@ class Level_31(AimLevel):
         self.border_y = 980
 
     def money_converter(self):
-        return (self.level + 0) * 0.31
+        return ( 2* 0.31)
 
 
     def count_points(self):

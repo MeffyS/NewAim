@@ -39,35 +39,38 @@ class Play(QtWidgets.QWidget):
 
         self.hearts()
         self.gained_gold()
+        self.username()
+        self.level_up()
+        self.points_image()
 
         self.heart_count_label = QLabel(str(self.health_value), self)
-        self.heart_count_label.setGeometry(350, 2, 50, 50)
-        self.heart_count_label.setStyleSheet("font-size: 25px;")
+        self.heart_count_label.setGeometry(30, 3, 10, 20)
+        self.heart_count_label.setStyleSheet("font-size: 20px;")
 
         self.gold_label = QLabel(str(self.gold), self)
-        self.gold_label.setGeometry(450, 2, 100, 50)
-        self.gold_label.setStyleSheet("font-size: 25px;")
+        self.gold_label.setGeometry(80, 3, 100, 20)
+        self.gold_label.setStyleSheet("font-size: 20px;")
 
         self.aim_timer_seconds = QLabel("0", self)
-        self.aim_timer_seconds.setGeometry(145, 15, 90, 25)
+        self.aim_timer_seconds.setGeometry(145, 315, 90, 25)
         self.aim_timer_seconds.setStyleSheet("font-size: 25px;")
 
         try:
-            self.waim_username = QLabel(f'{save["username"]}', self)
+            self.aim_username = QLabel(f'Username: {save["username"]}', self)
 
         except Exception:
-            self.aim_username = QLabel(f"{os.getlogin()}", self)
+            self.aim_username = QLabel(f"Username: {os.getlogin()}", self)
 
-        self.aim_username.setGeometry(15, 15, 130, 25)
-        self.aim_username.setStyleSheet("font-size: 25px;")
+        self.aim_username.setGeometry(25, 25, 260, 25)
+        self.aim_username.setStyleSheet("font-size: 20px;")
 
-        self.aim_level = QLabel("0", self)
-        self.aim_level.setGeometry(245, 15, 30, 25)
-        self.aim_level.setStyleSheet("font-size: 25px;")
+        self.aim_level = QLabel(f"0", self)
+        self.aim_level.setGeometry(530, 25, 30, 25)
+        self.aim_level.setStyleSheet("font-size: 20px;")
 
-        self.aim_points = QLabel(f"Points: {self.points}", self)
-        self.aim_points.setGeometry(555, 15, 130, 25)
-        self.aim_points.setStyleSheet("font-size: 25px;")
+        self.aim_points = QLabel(f"Points: {self.points:,}", self)
+        self.aim_points.setGeometry(330, 25, 150, 25)
+        self.aim_points.setStyleSheet("font-size: 20px;")
 
         self.aim_combo = QLabel(f"Combo:  {self.combo_points}", self)
         self.aim_combo.setGeometry(725, 5, 130, 25)
@@ -208,10 +211,9 @@ class Play(QtWidgets.QWidget):
 
     def hearts(self):
         self.heart_label = QLabel("", self)
-        self.heart_label.setGeometry(300, 2, 50, 50)
-        self.heart_label.setStyleSheet("font-size: 25px;")
+        self.heart_label.setGeometry(5, 0, 50, 25)
         self.heart_label_pixmap = QPixmap("Aim_icons/green_heart.png")
-        self.heart_label_pixmap = self.heart_label_pixmap.scaled(40, 40)
+        self.heart_label_pixmap = self.heart_label_pixmap.scaled(20, 20)
         self.heart_label.setPixmap(self.heart_label_pixmap)
 
         # self.heart_count_label = QLabel("", self)
@@ -219,17 +221,38 @@ class Play(QtWidgets.QWidget):
 
     def gained_gold(self):
         self.gold_img = QLabel("", self)
-        self.gold_img.setGeometry(400, 2, 50, 50)
-        self.gold_img.setStyleSheet("font-size: 25px;")
+        self.gold_img.setGeometry(60, 1, 50, 25)
         self.gold_img_pixmap = QPixmap("Aim_icons/coins.png")
-        self.gold_img_pixmap = self.gold_img_pixmap.scaled(40, 40)
+        self.gold_img_pixmap = self.gold_img_pixmap.scaled(20, 20)
         self.gold_img.setPixmap(self.gold_img_pixmap)
+
+    def username(self):
+        self.user_img = QLabel("", self)
+        self.user_img.setGeometry(3, 24, 50, 25)
+        self.user_img_pixmap = QPixmap("Aim_icons/user.png")
+        self.user_img_pixmap = self.user_img_pixmap.scaled(20, 20)
+        self.user_img.setPixmap(self.user_img_pixmap)
+
+    def level_up(self):
+        self.level_img = QLabel("", self)
+        self.level_img.setGeometry(300, 21, 40, 35)
+        self.level_img_pixmap = QPixmap("Aim_icons/crown.png")
+        self.level_img_pixmap = self.level_img_pixmap.scaled(20, 20)
+        self.level_img.setPixmap(self.level_img_pixmap)
+
+    def points_image(self):
+        self.points_img = QLabel("", self)
+        self.points_img.setGeometry(485, 20, 40, 35)
+        self.points_img_pixmap = QPixmap("Aim_icons/stars.png")
+        self.points_img_pixmap = self.points_img_pixmap.scaled(40, 40)
+        self.points_img.setPixmap(self.points_img_pixmap)
 
     def add_points(self):
         self.points += 1
-        self.aim_points.setText(f"Points: {self.points}")
+        self.aim_points.setText(f"Points: {self.points:,}")
         self.new_level = AimLevels.points_checker(self.points)
         self.aim_level.setText(str(self.new_level.level))
+        # self.aim_level.setText(f"Level: {self.new_level.level}")
         self.timer.start(self.new_level.change_speed)
 
         # COMBO POINTS
@@ -237,7 +260,7 @@ class Play(QtWidgets.QWidget):
 
     def remove_points(self):
         self.points -= 1
-        self.aim_points.setText(f"Points: {self.points}")
+        self.aim_points.setText(f"Points: {self.points:,}")
         self.new_level = AimLevels.points_checker(self.points)
         self.aim_level.setText(str(self.new_level.level))
 
