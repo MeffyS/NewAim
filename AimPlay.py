@@ -33,25 +33,29 @@ class Play(QtWidgets.QWidget):
         self.hit_points_value = 0
         self.miss_points_value = 0
         self.health_value = 5
+        self.gold = 100
 
         self.setFixedSize(1280, 1000)
 
         self.hearts()
+        self.gained_gold()
 
         self.heart_count_label = QLabel(str(self.health_value), self)
         self.heart_count_label.setGeometry(350, 2, 50, 50)
         self.heart_count_label.setStyleSheet("font-size: 25px;")
+
+        self.gold_label = QLabel(str(self.gold), self)
+        self.gold_label.setGeometry(450, 2, 100, 50)
+        self.gold_label.setStyleSheet("font-size: 25px;")
 
         self.aim_timer_seconds = QLabel("0", self)
         self.aim_timer_seconds.setGeometry(145, 15, 90, 25)
         self.aim_timer_seconds.setStyleSheet("font-size: 25px;")
 
         try:
-            # self.aim_username.setText(f'{save["username"]}')
             self.waim_username = QLabel(f'{save["username"]}', self)
 
         except Exception:
-            # self.aim_username.setText(f'{save["username"]}')
             self.aim_username = QLabel(f"{os.getlogin()}", self)
 
         self.aim_username.setGeometry(15, 15, 130, 25)
@@ -62,7 +66,7 @@ class Play(QtWidgets.QWidget):
         self.aim_level.setStyleSheet("font-size: 25px;")
 
         self.aim_points = QLabel(f"Points: {self.points}", self)
-        self.aim_points.setGeometry(525, 15, 130, 25)
+        self.aim_points.setGeometry(555, 15, 130, 25)
         self.aim_points.setStyleSheet("font-size: 25px;")
 
         self.aim_combo = QLabel(f"Combo:  {self.combo_points}", self)
@@ -80,6 +84,14 @@ class Play(QtWidgets.QWidget):
         self.miss_object_label = QLabel(f"Miss: {self.miss_points_value}", self)
         self.miss_object_label.setGeometry(1170, 15, 300, 25)
         self.miss_object_label.setStyleSheet("font-size: 25px;")
+
+        self.average_hit_label = QLabel(f"100 %", self)
+        self.average_hit_label.setGeometry(970, 15, 70, 25)
+        self.average_hit_label.setStyleSheet("font-size: 25px;")
+
+        self.average_hit_ratio_label = QLabel(f"HIT RATIO", self)
+        self.average_hit_ratio_label.setGeometry(870, 15, 100, 25)
+        self.average_hit_ratio_label.setStyleSheet("font-size: 20px;")
 
         self.hit_effect = QSoundEffect(self)
         self.hit_effect.setSource(QUrl.fromLocalFile("Aim_audio/punch.wav"))
@@ -151,6 +163,7 @@ class Play(QtWidgets.QWidget):
         self.miss_points()
         self.set_high_combo()
         self.set_attributes()
+        self.average_of_hit()
 
         self.obj_first.setGeometry(
             self.new_position_x,
@@ -162,9 +175,7 @@ class Play(QtWidgets.QWidget):
         self.hearts_remove()
 
     def clicked_button_change_position(self):
-        button_size = self.obj_first.sizeHint()
-        print(button_size.width())
-        print(button_size.height())
+
         QTest.mouseRelease(self.obj_first, Qt.LeftButton)
 
         self.hit_effect.play()
@@ -172,6 +183,8 @@ class Play(QtWidgets.QWidget):
         self.hit_points()
         self.combo_result()
         self.set_attributes()
+        self.average_of_hit()
+        self.click_gold()
 
         # self.new_position_x = random.randint(70, 1100)
         # self.new_position_y = random.randint(70, 850)
@@ -194,18 +207,23 @@ class Play(QtWidgets.QWidget):
         )
 
     def hearts(self):
-        self.heart_label = QLabel("a", self)
+        self.heart_label = QLabel("", self)
         self.heart_label.setGeometry(300, 2, 50, 50)
         self.heart_label.setStyleSheet("font-size: 25px;")
         self.heart_label_pixmap = QPixmap("Aim_icons/green_heart.png")
         self.heart_label_pixmap = self.heart_label_pixmap.scaled(40, 40)
         self.heart_label.setPixmap(self.heart_label_pixmap)
-        self.heart_label.setStyleSheet("color: red;")
-        self.heart_label.raise_()
-        self.heart_label.stackUnder(self)
 
-        self.heart_count_label = QLabel("", self)
-        self.heart_count_label.setGeometry(350, 2, 50, 50)
+        # self.heart_count_label = QLabel("", self)
+        # self.heart_count_label.setGeometry(350, 2, 50, 50)
+
+    def gained_gold(self):
+        self.gold_img = QLabel("", self)
+        self.gold_img.setGeometry(400, 2, 50, 50)
+        self.gold_img.setStyleSheet("font-size: 25px;")
+        self.gold_img_pixmap = QPixmap("Aim_icons/coins.png")
+        self.gold_img_pixmap = self.gold_img_pixmap.scaled(40, 40)
+        self.gold_img.setPixmap(self.gold_img_pixmap)
 
     def add_points(self):
         self.points += 1
@@ -302,6 +320,32 @@ class Play(QtWidgets.QWidget):
                 }}
                 """
             )
+
+    def average_of_hit(self) -> int:
+        if self.miss_points_value > 0:
+            self.average_result = round(
+                (
+                    self.hit_points_value
+                    / (self.miss_points_value + self.hit_points_value)
+                    * 100
+                ),
+                2,
+            )
+            self.average_hit_label.setText(f"{str(self.average_result)}")
+        else:
+            self.average_hit_label.setText(f"100 %")
+
+    def click_gold(self) -> int:
+        self.level_gold = AimLevels.set_level_attributes(self.points)
+        self.gold_converter = self.level_gold.money_converter()
+        self.gold += self.gold_converter
+        print(round(self.gold, 2))
+        self.gold_label.setText(f"{round(self.gold,2)}")
+
+        # z = self.points * self.level_gold.money_converter()
+        # gold += (self.points * z )
+        # print(z)
+        # print('gold',gold)
 
 
 class AimObject(QtWidgets.QPushButton):
