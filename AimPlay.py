@@ -1,6 +1,7 @@
 import sys
 import random
 import os
+import time
 
 
 from PySide6.QtCore import QUrl
@@ -9,7 +10,7 @@ from PySide6.QtMultimedia import QSoundEffect
 from PySide6.QtCore import QTimer, QDateTime, QElapsedTimer, Qt, QSize
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import QLabel, QFrame
-from PySide6.QtGui import QPixmap, QCursor, QIcon
+from PySide6.QtGui import QPixmap, QCursor, QIcon, QShortcut, QKeySequence
 from PySide6.QtTest import QTest
 
 
@@ -34,6 +35,7 @@ class Play(QtWidgets.QWidget):
         self.miss_points_value = 0
         self.health_value = 5
         self.gold = 100
+        self.space_helper_count = 10
 
         self.setFixedSize(1280, 1000)
 
@@ -65,11 +67,11 @@ class Play(QtWidgets.QWidget):
         self.aim_username.setStyleSheet("font-size: 20px;")
 
         self.aim_level = QLabel(f"0", self)
-        self.aim_level.setGeometry(530, 25, 30, 25)
+        self.aim_level.setGeometry(330, 25, 30, 25)
         self.aim_level.setStyleSheet("font-size: 20px;")
 
         self.aim_points = QLabel(f"Points: {self.points:,}", self)
-        self.aim_points.setGeometry(330, 25, 150, 25)
+        self.aim_points.setGeometry(330, 0, 150, 25)
         self.aim_points.setStyleSheet("font-size: 20px;")
 
         self.aim_combo = QLabel(f"Combo:  {self.combo_points}", self)
@@ -122,7 +124,12 @@ class Play(QtWidgets.QWidget):
 
         self.obj_first.pressed.connect(self.clicked_button_change_position)
         self.obj_first.setAutoExclusive(False)
-        # self.obj_first.setFocusPolicy(Qt.NoFocus) #Blocking Keyboard
+        self.obj_first.setFocusPolicy(Qt.NoFocus) #Blocking Keyboard
+
+        self.last_hit = QLabel("", self)
+        self.last_hit.setGeometry(0, 0, 20, 20)
+        self.last_hit.setStyleSheet("background-color: #75a154; border-radius: 10px;")
+        self.last_hit.hide()
 
         self.menu_line = QFrame(self)
         self.menu_line.setFrameShape(QFrame.HLine)
@@ -159,6 +166,11 @@ class Play(QtWidgets.QWidget):
         """
         )
 
+        shortcut = QShortcut(QKeySequence("space"), self)
+        self.shortcut_available = True
+        shortcut.activated.connect(self.onShortcutActivated)
+
+
     def no_clicked_button_change_position(self):
 
         self.fail_effect.play()
@@ -181,22 +193,15 @@ class Play(QtWidgets.QWidget):
 
         QTest.mouseRelease(self.obj_first, Qt.LeftButton)
 
-        self.hit_effect.play()
-        self.add_points()
-        self.hit_points()
-        self.combo_result()
-        self.set_attributes()
-        self.average_of_hit()
-        self.click_gold()
+        self.click_functionality()
 
-        # self.new_position_x = random.randint(70, 1100)
-        # self.new_position_y = random.randint(70, 850)
         self.obj_first.setGeometry(
             self.new_position_x,
             self.new_position_y,
             self.obj_first.o_width,
             self.obj_first.o_height,
         )
+            
 
     def update_time_label(self):
 
@@ -210,16 +215,16 @@ class Play(QtWidgets.QWidget):
         )
 
     def hearts(self):
+
         self.heart_label = QLabel("", self)
         self.heart_label.setGeometry(5, 0, 50, 25)
         self.heart_label_pixmap = QPixmap("Aim_icons/green_heart.png")
         self.heart_label_pixmap = self.heart_label_pixmap.scaled(20, 20)
         self.heart_label.setPixmap(self.heart_label_pixmap)
 
-        # self.heart_count_label = QLabel("", self)
-        # self.heart_count_label.setGeometry(350, 2, 50, 50)
 
     def gained_gold(self):
+
         self.gold_img = QLabel("", self)
         self.gold_img.setGeometry(60, 1, 50, 25)
         self.gold_img_pixmap = QPixmap("Aim_icons/coins.png")
@@ -234,20 +239,23 @@ class Play(QtWidgets.QWidget):
         self.user_img.setPixmap(self.user_img_pixmap)
 
     def level_up(self):
+
         self.level_img = QLabel("", self)
-        self.level_img.setGeometry(300, 21, 40, 35)
+        self.level_img.setGeometry(290, 20, 40, 35)
         self.level_img_pixmap = QPixmap("Aim_icons/crown.png")
         self.level_img_pixmap = self.level_img_pixmap.scaled(20, 20)
         self.level_img.setPixmap(self.level_img_pixmap)
 
     def points_image(self):
+
         self.points_img = QLabel("", self)
-        self.points_img.setGeometry(485, 20, 40, 35)
+        self.points_img.setGeometry(280, 0, 40, 24)
         self.points_img_pixmap = QPixmap("Aim_icons/stars.png")
         self.points_img_pixmap = self.points_img_pixmap.scaled(40, 40)
         self.points_img.setPixmap(self.points_img_pixmap)
 
     def add_points(self):
+
         self.points += 1
         self.aim_points.setText(f"Points: {self.points:,}")
         self.new_level = AimLevels.points_checker(self.points)
@@ -259,12 +267,14 @@ class Play(QtWidgets.QWidget):
         self.combo_points_counter += 1
 
     def remove_points(self):
+
         self.points -= 1
         self.aim_points.setText(f"Points: {self.points:,}")
         self.new_level = AimLevels.points_checker(self.points)
         self.aim_level.setText(str(self.new_level.level))
 
     def hit_points(self):
+
         self.hit_points_value += 1
         self.hit_object_label.setText(f"Hit: {self.hit_points_value}")
 
@@ -274,6 +284,7 @@ class Play(QtWidgets.QWidget):
         self.miss_object_label.setText(f"Miss: {self.miss_points_value}")
 
     def hearts_remove(self):
+
         self.new_heart_count = 5
 
         heart = {
@@ -295,13 +306,10 @@ class Play(QtWidgets.QWidget):
             if self.new_heart_count <= x:
                 self.new_heart_count = x
 
-    def ignore_buttons(self, event):
-        if event.key() == Qt.Key_Space:
-            event.ignore()
-        else:
-            super().keyPressEvent(event)
+
 
     def combo_result(self):
+
         self.aim_combo.setText(f"Combo: {self.combo_points_counter}")
 
     def set_high_combo(self):
@@ -345,6 +353,7 @@ class Play(QtWidgets.QWidget):
             )
 
     def average_of_hit(self) -> int:
+
         if self.miss_points_value > 0:
             self.average_result = round(
                 (
@@ -359,16 +368,83 @@ class Play(QtWidgets.QWidget):
             self.average_hit_label.setText(f"100 %")
 
     def click_gold(self) -> int:
+
         self.level_gold = AimLevels.set_level_attributes(self.points)
         self.gold_converter = self.level_gold.money_converter()
         self.gold += self.gold_converter
         print(round(self.gold, 2))
         self.gold_label.setText(f"{round(self.gold,2)}")
 
-        # z = self.points * self.level_gold.money_converter()
-        # gold += (self.points * z )
-        # print(z)
-        # print('gold',gold)
+    def click_mouse_pos(self):
+
+        mouse_position = QCursor.pos()
+        # print(f"Kliknięto w pozycji: {mouse_position}")
+        x = mouse_position.x()
+        y = mouse_position.y()
+        print(x, y)
+        if y < 100:
+            self.last_hit.hide()
+        else:
+            self.last_hit.setGeometry(x - 18, y - 50, 20, 20)
+            self.last_hit.show()
+
+    # def keyPressEvent(self, event):
+        
+    #     if event.key() == Qt.Key_Space:
+    #         self.click_functions()
+    #         self.obj_first.setGeometry(
+    #         self.new_position_x,
+    #         self.new_position_y,
+    #         self.obj_first.o_width,
+    #         self.obj_first.o_height,
+    #     )
+            
+    #         print('space')
+    #     elif event.key() == Qt.Key_A:
+    #         self.last_hit.hide()
+    #     elif event.key() == Qt.Key_S:
+    #         print("S key pressed")
+    #     elif event.key() == Qt.Key_D:
+    #         print("D key pressed")
+    #     else:
+    #         super().keyPressEvent(event)
+   
+
+    def click_functionality(self):
+        self.hit_effect.play()
+        self.add_points()
+        self.hit_points()
+        self.combo_result()
+        self.set_attributes()
+        self.average_of_hit()
+        self.click_gold()
+        self.click_mouse_pos()
+
+        self.obj_first.setGeometry(
+            self.new_position_x,
+            self.new_position_y,
+            self.obj_first.o_width,
+            self.obj_first.o_height,
+        )
+    
+    def onShortcutActivated(self):
+        
+        if self.shortcut_available and self.space_helper_count > 0: 
+            self.shortcut_available = False
+            self.click_functionality()
+            self.last_hit.hide()
+            QTimer.singleShot(500, self.enableButton)
+            self.space_helper_count -= 1
+
+
+    
+    def enableButton(self):
+        self.shortcut_available = True
+        
+    
+
+
+
 
 
 class AimObject(QtWidgets.QPushButton):
