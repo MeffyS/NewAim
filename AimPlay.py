@@ -44,6 +44,8 @@ class Play(QtWidgets.QWidget):
         self.gold = 100
         self.space_helper_count = 10
 
+        self.fastest_click = None
+
         self.setFixedSize(1280, 1000)
 
         self.hearts()
@@ -53,6 +55,7 @@ class Play(QtWidgets.QWidget):
         self.points_image()
         self.hit_combo_image()
         self.miss_combo_image()
+
 
         self.heart_count_label = QLabel(str(self.health_value), self)
         self.heart_count_label.setGeometry(30, 3, 10, 20)
@@ -75,7 +78,7 @@ class Play(QtWidgets.QWidget):
         self.aim_username.setGeometry(25, 25, 260, 25)
         self.aim_username.setStyleSheet("font-size: 20px;")
 
-        self.aim_level = QLabel(f"0", self)
+        self.aim_level = QLabel(f"{0}", self)
         self.aim_level.setGeometry(330, 25, 30, 25)
         self.aim_level.setStyleSheet("font-size: 20px;")
 
@@ -84,7 +87,7 @@ class Play(QtWidgets.QWidget):
         self.aim_points.setStyleSheet("font-size: 20px;")
 
         self.aim_combo = QLabel(f"Combo:  {self.combo_points}", self)
-        self.aim_combo.setGeometry(500, 660, 130, 25)
+        self.aim_combo.setGeometry(500, 660, 0, 0)
         self.aim_combo.setStyleSheet("font-size: 15px;")
 
         self.hit_object_label = QLabel(f"Hit: {self.hit_points_value}", self)
@@ -104,12 +107,12 @@ class Play(QtWidgets.QWidget):
         self.average_hit_ratio_label.setStyleSheet("font-size: 20px;")
 
         self.highest_score_label = QLabel(f"Highest Score", self)
-        self.highest_score_label.setGeometry(470, 200, 120, 17)
-        self.highest_score_label.setStyleSheet("font-size: 13px;")
+        self.highest_score_label.setGeometry(700, 20, 120, 20)
+        self.highest_score_label.setStyleSheet("font-size: 15px;")
 
-        self.fastest_click_label = QLabel(f"Fastest Click", self)
-        self.fastest_click_label.setGeometry(470, 280, 120, 17)
-        self.fastest_click_label.setStyleSheet("font-size: 13px;")
+        self.fastest_click_label = QLabel(f"Fastest Click: {self.fastest_click}", self)
+        self.fastest_click_label.setGeometry(700, 0, 150, 17)
+        self.fastest_click_label.setStyleSheet("font-size: 15px;")
 
         self.hit_combo_label = QLabel(f"Hit Combo: {self.combo_high}", self)
         self.hit_combo_label.setGeometry(510, 23, 160, 30)
@@ -200,6 +203,7 @@ class Play(QtWidgets.QWidget):
         self.combo_miss_result()
         self.set_attributes()
         self.average_of_hit()
+        self.show_miss_combo()
 
         self.obj_first.setGeometry(
             self.new_position_x,
@@ -212,7 +216,24 @@ class Play(QtWidgets.QWidget):
 
     def clicked_button_change_position(self):
 
+        click_time = time.time() - self.button_start_time
+        if self.fastest_click is None or click_time < self.fastest_click:
+            self.fastest_click = click_time
+            self.fastest_click_label.setText(
+                f"Fastest Click: {round(self.fastest_click,5)}"
+            )
+
+
+        self.button_start_time = time.time()
+        self.change_obj_first_position()
+        self.show_hit_combo()
+
         QTest.mouseRelease(self.obj_first, Qt.LeftButton)
+
+    def showEvent(self, event):
+        self.button_start_time = time.time()
+
+    def change_obj_first_position(self):
 
         self.click_functionality()
 
@@ -222,6 +243,7 @@ class Play(QtWidgets.QWidget):
             self.obj_first.o_width,
             self.obj_first.o_height,
         )
+        
 
     def update_time_label(self):
 
@@ -290,7 +312,6 @@ class Play(QtWidgets.QWidget):
         self.miss_img.setPixmap(self.miss_img_pixmap)
 
     def add_points(self):
-
         self.points += 1
         self.aim_points.setText(f"Points: {self.points:,}")
         self.new_level = AimLevels.points_checker(self.points)
@@ -303,13 +324,13 @@ class Play(QtWidgets.QWidget):
 
     def remove_points(self):
 
+        print("p,", self.points)
         self.points -= 1
         self.aim_points.setText(f"Points: {self.points:,}")
         self.new_level = AimLevels.points_checker(self.points)
         self.aim_level.setText(str(self.new_level.level))
 
         self.combo_miss_points_counter += 1
-        print(self.combo_miss_points_counter)
 
     def hit_points(self):
 
@@ -363,12 +384,9 @@ class Play(QtWidgets.QWidget):
     def set_miss_combo(self):
 
         if self.combo_miss_points_counter >= self.combo_miss_high:
-            print("xd")
             self.combo_miss_high = self.combo_miss_points_counter
-            print('this',self.combo_miss_high)
             self.miss_combo_label.setText(f"Miss Combo: {self.combo_miss_high}")
         self.combo_miss_points_counter = 0
-
 
     def set_attributes(self):
         self.level_options = AimLevels.set_level_attributes(self.points)
@@ -428,7 +446,6 @@ class Play(QtWidgets.QWidget):
     def click_mouse_pos(self):
 
         mouse_position = QCursor.pos()
-        # print(f"Kliknięto w pozycji: {mouse_position}")
         x = mouse_position.x()
         y = mouse_position.y()
         print(x, y)
@@ -438,15 +455,16 @@ class Play(QtWidgets.QWidget):
             self.last_hit.setGeometry(x - 18, y - 50, 20, 20)
             self.last_hit.show()
 
-
     def click_functionality(self):
+        
         self.hit_effect.play()
+        
         self.add_points()
         self.hit_points()
         self.combo_result()
-
+        
         self.set_miss_combo()
-
+        
         self.set_attributes()
         self.average_of_hit()
         self.click_gold()
@@ -471,6 +489,38 @@ class Play(QtWidgets.QWidget):
     def enableButton(self):
 
         self.shortcut_available = True
+
+    def show_hit_combo(self):
+        if int(self.aim_level.text()) < 20:
+            self.aim_combo.setGeometry(
+                (self.new_position_x + 95) - (int(self.aim_level.text()) * 5),
+                self.new_position_y - 25,
+                130,
+                21,
+            )
+        else:
+            self.aim_combo.setGeometry(
+                (self.new_position_x + 55) - (int(self.aim_level.text()) * 2.5),
+                self.new_position_y - 25,
+                130,
+                21,
+            )
+
+    def show_miss_combo(self):
+        if int(self.aim_level.text()) < 20:
+            self.aim_combo.setGeometry(
+                (self.new_position_x + 80) - (int(self.aim_level.text()) * 5),
+                self.new_position_y - 25,
+                130,
+                25,
+            )
+        else:
+            self.aim_combo.setGeometry(
+                (self.new_position_x + 30) - (int(self.aim_level.text()) * 2.5),
+                self.new_position_y - 25,
+                130,
+                25,
+            )
 
 
 class AimObject(QtWidgets.QPushButton):
