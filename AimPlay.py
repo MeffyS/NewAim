@@ -45,6 +45,7 @@ class Play(QtWidgets.QWidget):
         self.space_helper_count = 10
 
         self.fastest_click = None
+        self.highest_score = 0
 
         self.setFixedSize(1280, 1000)
 
@@ -55,7 +56,6 @@ class Play(QtWidgets.QWidget):
         self.points_image()
         self.hit_combo_image()
         self.miss_combo_image()
-
 
         self.heart_count_label = QLabel(str(self.health_value), self)
         self.heart_count_label.setGeometry(30, 3, 10, 20)
@@ -106,7 +106,7 @@ class Play(QtWidgets.QWidget):
         self.average_hit_ratio_label.setGeometry(870, 15, 100, 25)
         self.average_hit_ratio_label.setStyleSheet("font-size: 20px;")
 
-        self.highest_score_label = QLabel(f"Highest Score", self)
+        self.highest_score_label = QLabel(f"{0}", self)
         self.highest_score_label.setGeometry(700, 20, 120, 20)
         self.highest_score_label.setStyleSheet("font-size: 15px;")
 
@@ -223,7 +223,6 @@ class Play(QtWidgets.QWidget):
                 f"Fastest Click: {round(self.fastest_click,5)}"
             )
 
-
         self.button_start_time = time.time()
         self.change_obj_first_position()
         self.show_hit_combo()
@@ -243,7 +242,6 @@ class Play(QtWidgets.QWidget):
             self.obj_first.o_width,
             self.obj_first.o_height,
         )
-        
 
     def update_time_label(self):
 
@@ -420,6 +418,11 @@ class Play(QtWidgets.QWidget):
                 """
             )
 
+    def set_highest_score(self) -> int:
+        if self.points > self.highest_score or self.highest_score is None:
+            self.highest_score = self.points
+            self.highest_score_label.setText(f"Highest score: {int(self.highest_score)}")
+
     def average_of_hit(self) -> int:
 
         if self.miss_points_value > 0:
@@ -444,31 +447,39 @@ class Play(QtWidgets.QWidget):
         self.gold_label.setText(f"{round(self.gold,2)}")
 
     def click_mouse_pos(self):
+        """
+        This function set correct mouse position concerning game window.
+        The position does not refer to the screen
 
-        mouse_position = QCursor.pos()
-        x = mouse_position.x()
-        y = mouse_position.y()
-        print(x, y)
-        if y < 100:
+        """
+
+        global_mouse_pos = QCursor.pos()
+        local_mouse_pos = self.mapFromGlobal(
+            global_mouse_pos
+        )  # Refer mouse pos from screen to mouse application pos
+        mouse_pos_x = local_mouse_pos.x()
+        mouse_pos_y = local_mouse_pos.y()
+        if mouse_pos_y < 100:
             self.last_hit.hide()
         else:
-            self.last_hit.setGeometry(x - 18, y - 50, 20, 20)
+            self.last_hit.setGeometry(mouse_pos_x - 10, mouse_pos_y - 20, 20, 20)
             self.last_hit.show()
 
     def click_functionality(self):
-        
+
         self.hit_effect.play()
-        
+
         self.add_points()
         self.hit_points()
         self.combo_result()
-        
+
         self.set_miss_combo()
-        
+
         self.set_attributes()
         self.average_of_hit()
         self.click_gold()
         self.click_mouse_pos()
+        self.set_highest_score()
 
         self.obj_first.setGeometry(
             self.new_position_x,
