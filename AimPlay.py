@@ -28,11 +28,18 @@ class Play(QtWidgets.QWidget):
 
         self.aim_seconds = 0
         self.points = 0
+
         self.combo_points_counter = 0
         self.combo_points = 0
         self.combo_high = 0
+
+        self.combo_miss_points_counter = 0
+        self.combo_miss_points = 0
+        self.combo_miss_high = 0
+
         self.hit_points_value = 0
         self.miss_points_value = 0
+
         self.health_value = 5
         self.gold = 100
         self.space_helper_count = 10
@@ -109,7 +116,7 @@ class Play(QtWidgets.QWidget):
         self.hit_combo_label.setStyleSheet("font-size: 20px;")
 
         self.miss_combo_label = QLabel(f"Miss Combo: 0", self)
-        self.miss_combo_label.setGeometry(510, 3, 130, 20)
+        self.miss_combo_label.setGeometry(510, 3, 160, 20)
         self.miss_combo_label.setStyleSheet("font-size: 20px;")
 
         self.hit_effect = QSoundEffect(self)
@@ -190,6 +197,7 @@ class Play(QtWidgets.QWidget):
         self.remove_points()
         self.miss_points()
         self.set_high_combo()
+        self.combo_miss_result()
         self.set_attributes()
         self.average_of_hit()
 
@@ -287,7 +295,7 @@ class Play(QtWidgets.QWidget):
         self.aim_points.setText(f"Points: {self.points:,}")
         self.new_level = AimLevels.points_checker(self.points)
         self.aim_level.setText(str(self.new_level.level))
-        # self.aim_level.setText(f"Level: {self.new_level.level}")
+
         self.timer.start(self.new_level.change_speed)
 
         # COMBO POINTS
@@ -299,6 +307,9 @@ class Play(QtWidgets.QWidget):
         self.aim_points.setText(f"Points: {self.points:,}")
         self.new_level = AimLevels.points_checker(self.points)
         self.aim_level.setText(str(self.new_level.level))
+
+        self.combo_miss_points_counter += 1
+        print(self.combo_miss_points_counter)
 
     def hit_points(self):
 
@@ -337,6 +348,10 @@ class Play(QtWidgets.QWidget):
 
         self.aim_combo.setText(f"Combo: {self.combo_points_counter}")
 
+    def combo_miss_result(self):
+
+        self.aim_combo.setText(f"Miss Combo: {self.combo_miss_points_counter}")
+
     def set_high_combo(self):
 
         if self.combo_points_counter >= self.combo_high:
@@ -344,6 +359,16 @@ class Play(QtWidgets.QWidget):
             self.hit_combo_label.setText(f"Hit Combo: {self.combo_high}")
         self.combo_points_counter = 0
         self.aim_combo.setText(f"Combo: {str(0)}")
+
+    def set_miss_combo(self):
+
+        if self.combo_miss_points_counter >= self.combo_miss_high:
+            print("xd")
+            self.combo_miss_high = self.combo_miss_points_counter
+            print('this',self.combo_miss_high)
+            self.miss_combo_label.setText(f"Miss Combo: {self.combo_miss_high}")
+        self.combo_miss_points_counter = 0
+
 
     def set_attributes(self):
         self.level_options = AimLevels.set_level_attributes(self.points)
@@ -413,32 +438,15 @@ class Play(QtWidgets.QWidget):
             self.last_hit.setGeometry(x - 18, y - 50, 20, 20)
             self.last_hit.show()
 
-    # def keyPressEvent(self, event):
-
-    #     if event.key() == Qt.Key_Space:
-    #         self.click_functions()
-    #         self.obj_first.setGeometry(
-    #         self.new_position_x,
-    #         self.new_position_y,
-    #         self.obj_first.o_width,
-    #         self.obj_first.o_height,
-    #     )
-
-    #         print('space')
-    #     elif event.key() == Qt.Key_A:
-    #         self.last_hit.hide()
-    #     elif event.key() == Qt.Key_S:
-    #         print("S key pressed")
-    #     elif event.key() == Qt.Key_D:
-    #         print("D key pressed")
-    #     else:
-    #         super().keyPressEvent(event)
 
     def click_functionality(self):
         self.hit_effect.play()
         self.add_points()
         self.hit_points()
         self.combo_result()
+
+        self.set_miss_combo()
+
         self.set_attributes()
         self.average_of_hit()
         self.click_gold()
@@ -461,6 +469,7 @@ class Play(QtWidgets.QWidget):
             self.space_helper_count -= 1
 
     def enableButton(self):
+
         self.shortcut_available = True
 
 

@@ -8,7 +8,7 @@ class AimLevel(ABC):
         money=0,
         min_points=0,
         max_points=25,
-        change_speed=10000,
+        change_speed=2000,
         hearts=4,
         points_counter=1,
         object_width=250,
@@ -42,7 +42,7 @@ class Level_0(AimLevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.level = 0
-        self.change_speed = 10000
+        self.change_speed = 2000
 
     def money_converter(self):
 
