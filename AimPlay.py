@@ -46,6 +46,7 @@ class Play(QtWidgets.QWidget):
 
         self.fastest_click = None
         self.highest_score = 0
+        self.hit_ratio = 100
 
         self.setFixedSize(1280, 1000)
 
@@ -56,6 +57,7 @@ class Play(QtWidgets.QWidget):
         self.points_image()
         self.hit_combo_image()
         self.miss_combo_image()
+        self.time_image()
 
         self.heart_count_label = QLabel(str(self.health_value), self)
         self.heart_count_label.setGeometry(30, 3, 10, 20)
@@ -66,8 +68,8 @@ class Play(QtWidgets.QWidget):
         self.gold_label.setStyleSheet("font-size: 20px;")
 
         self.aim_timer_seconds = QLabel("0", self)
-        self.aim_timer_seconds.setGeometry(145, 315, 90, 25)
-        self.aim_timer_seconds.setStyleSheet("font-size: 25px;")
+        self.aim_timer_seconds.setGeometry(1190, 25, 90, 20)
+        self.aim_timer_seconds.setStyleSheet("font-size: 20px;")
 
         try:
             self.aim_username = QLabel(f'Username: {save["username"]}', self)
@@ -91,28 +93,28 @@ class Play(QtWidgets.QWidget):
         self.aim_combo.setStyleSheet("font-size: 15px;")
 
         self.hit_object_label = QLabel(f"Hit: {self.hit_points_value}", self)
-        self.hit_object_label.setGeometry(1070, 15, 300, 25)
-        self.hit_object_label.setStyleSheet("font-size: 25px;")
+        self.hit_object_label.setGeometry(970, 1, 100, 18)
+        self.hit_object_label.setStyleSheet("font-size: 15px;")
 
         self.miss_object_label = QLabel(f"Miss: {self.miss_points_value}", self)
-        self.miss_object_label.setGeometry(1170, 15, 300, 25)
-        self.miss_object_label.setStyleSheet("font-size: 25px;")
+        self.miss_object_label.setGeometry(970, 18, 150, 13)
+        self.miss_object_label.setStyleSheet("font-size: 15px;")
 
-        self.average_hit_label = QLabel(f"100 %", self)
-        self.average_hit_label.setGeometry(970, 15, 70, 25)
-        self.average_hit_label.setStyleSheet("font-size: 25px;")
+        self.time_label = QLabel(f"Timer", self)
+        self.time_label.setGeometry(1190, 3, 70, 20)
+        self.time_label.setStyleSheet("font-size: 20px;")
 
-        self.average_hit_ratio_label = QLabel(f"HIT RATIO", self)
-        self.average_hit_ratio_label.setGeometry(870, 15, 100, 25)
-        self.average_hit_ratio_label.setStyleSheet("font-size: 20px;")
+        self.average_hit_ratio_label = QLabel(f"Ratio: {self.hit_ratio} %", self)
+        self.average_hit_ratio_label.setGeometry(970, 34, 100, 12)
+        self.average_hit_ratio_label.setStyleSheet("font-size: 15px;")
 
-        self.highest_score_label = QLabel(f"{0}", self)
-        self.highest_score_label.setGeometry(700, 20, 120, 20)
-        self.highest_score_label.setStyleSheet("font-size: 15px;")
+        self.highest_score_label = QLabel(f"Highest score: {self.highest_score}", self)
+        self.highest_score_label.setGeometry(700, 25, 160, 25)
+        self.highest_score_label.setStyleSheet("font-size: 20px;")
 
         self.fastest_click_label = QLabel(f"Fastest Click: {self.fastest_click}", self)
-        self.fastest_click_label.setGeometry(700, 0, 150, 17)
-        self.fastest_click_label.setStyleSheet("font-size: 15px;")
+        self.fastest_click_label.setGeometry(700, 4, 250, 17)
+        self.fastest_click_label.setStyleSheet("font-size: 20px;")
 
         self.hit_combo_label = QLabel(f"Hit Combo: {self.combo_high}", self)
         self.hit_combo_label.setGeometry(510, 23, 160, 30)
@@ -156,11 +158,11 @@ class Play(QtWidgets.QWidget):
         self.last_hit.hide()
 
         self.menu_line = QFrame(self)
-        self.menu_line.setFrameShape(QFrame.HLine)
+        # self.menu_line.setFrameShape(QFrame.HLine)
         self.menu_line.setFrameShadow(QFrame.Sunken)
         self.menu_line.setGeometry(2, 50, 1278, 10)
         self.menu_line.setLineWidth(4)
-        self.menu_line.setStyleSheet("background-color: #61c7a2")
+        self.menu_line.setStyleSheet("background-color: white")
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.no_clicked_button_change_position)
@@ -309,8 +311,16 @@ class Play(QtWidgets.QWidget):
         self.miss_img_pixmap = self.miss_img_pixmap.scaled(22, 22)
         self.miss_img.setPixmap(self.miss_img_pixmap)
 
+    def time_image(self):
+        self.time_img = QLabel("", self)
+        self.time_img.setGeometry(1160, 8, 70, 35)
+
+        self.time_img_pixmap = QPixmap("Aim_icons/hourglass.png")
+        self.time_img_pixmap = self.time_img_pixmap.scaled(30, 30)
+        self.time_img.setPixmap(self.time_img_pixmap)
+
     def add_points(self):
-        self.points += 1
+        self.points += 20
         self.aim_points.setText(f"Points: {self.points:,}")
         self.new_level = AimLevels.points_checker(self.points)
         self.aim_level.setText(str(self.new_level.level))
@@ -421,7 +431,10 @@ class Play(QtWidgets.QWidget):
     def set_highest_score(self) -> int:
         if self.points > self.highest_score or self.highest_score is None:
             self.highest_score = self.points
-            self.highest_score_label.setText(f"Highest score: {int(self.highest_score)}")
+            self.highest_score_label.setText(
+                f"Highest score: {int(self.highest_score)}"
+            )
+            self.points
 
     def average_of_hit(self) -> int:
 
@@ -434,9 +447,10 @@ class Play(QtWidgets.QWidget):
                 ),
                 2,
             )
-            self.average_hit_label.setText(f"{str(self.average_result)}")
+            self.hit_ratio = self.average_result
+            self.average_hit_ratio_label.setText(f"Ratio: {str(self.hit_ratio)} %")
         else:
-            self.average_hit_label.setText(f"100 %")
+            self.average_hit_ratio_label.setText(f"Ratio: 100 %")
 
     def click_gold(self) -> int:
 
