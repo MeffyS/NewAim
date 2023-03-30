@@ -65,39 +65,32 @@ class MainWindow(QMainWindow):
 
         pos = self.pos()
         x, y = int(pos.x()), int(pos.y())
-        # self.test_label.setGeometry(x + 500, y + 31, 500, 500)
+        self.test_label.setGeometry(x + 500, y + 31, 500, 500)
         self.test_label.setStyleSheet("background-color: #431556; color: #ffffff")
         achievements_params = self.test_label.geometry()
-        print("achi x", achievements_params.x())
-        print("achi y", achievements_params.y())
-
         screen = app.primaryScreen()
+        print("achi x", achievements_params.x()+500)
+        print("achi y", achievements_params.y())
         print(f"Screen Height: {screen.size().height()}")
         print(f"Screen Width: {screen.size().width()}")
+        screen_x = screen.size().width()
+        achievement_x = achievements_params.x()
+        achievement_width = achievements_params.width()
+        if screen_x // 2 > (achievement_x // 2) + achievement_width :
+            
 
-        # if screen.size().height() // 2:
-        if achievements_params.x() // 2 > 0:
+            print("screen is > ")
+        else:
+            print("Screen is < ")
             self.test_label.setGeometry(x - 500, y + 31, 500, 500)
-            print(
-                "Lewa",
-            )
-            print(achievements_params.x() // 2, "scr", screen.size().width() // 2)
-            if achievements_params.x() // 2 < 0:
-                self.test_label.setGeometry(x + 500, y + 31, 500, 500) 
 
-                
-        # elif achievements_params.x() // 2 < 0:
-        #     print('p')
-        #     self.test_label.setGeometry(x - 500, y + 31, 500, 500)
-
-        # if achievements_params.x() // 2 < 1:
+        # if achievements_params.x() // 2 > 1 :
+        #     self.test_label.setGeometry(x + 500, y + 31, 500, 500)
         #     print(
-        #         "Prawa",
+        #         "Lewa",
         #     )
-        #     self.test_label.setGeometry(x + 400, y + 31, 500, 500)
-        # if achievements_params.x() + 100 > screen.size().height():
-        #     self.test_label.setGeometry(x - 500, y + 31, 500, 500)
-        # if achievements_params.x() - 100 < screen.size().height():
+        #     print(achievements_params.x() // 2, "scr", screen.size().width() // 2)
+        # if achievements_params.x() // 2 < 1 :
         #     self.test_label.setGeometry(x - 500, y + 31, 500, 500)
 
 
