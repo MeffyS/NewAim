@@ -13,7 +13,7 @@ from PySide6.QtWidgets import QLabel, QFrame
 from PySide6.QtGui import QPixmap, QCursor, QIcon, QShortcut, QKeySequence
 from PySide6.QtTest import QTest
 
-
+from test import MyTest
 import AimLevels
 
 
@@ -21,6 +21,8 @@ class Play(QtWidgets.QWidget):
     def __init__(self, save):
         super().__init__()
         self.save = save
+
+        self.a = MyTest()
 
         self.setCursor(QCursor(QPixmap("Aim_icons/axe.png")))
 
@@ -48,6 +50,9 @@ class Play(QtWidgets.QWidget):
         self.highest_score = 0
         self.hit_ratio = 100
 
+        self.achievements_label = QLabel("Achie", self)
+        self.achievements_label.setGeometry(1250, 5, 50, 40)
+
         self.setFixedSize(1280, 1000)
 
         self.hearts()
@@ -58,6 +63,13 @@ class Play(QtWidgets.QWidget):
         self.hit_combo_image()
         self.miss_combo_image()
         self.time_image()
+        self.hit_image()
+        self.miss_image()
+        self.ratio_image()
+        self.achievement_image()
+
+        self.achievements_label.enterEvent = self.show_achievement_stats
+        self.achievements_label.leaveEvent = self.hide_achievement_stats
 
         self.heart_count_label = QLabel(str(self.health_value), self)
         self.heart_count_label.setGeometry(30, 3, 10, 20)
@@ -68,7 +80,7 @@ class Play(QtWidgets.QWidget):
         self.gold_label.setStyleSheet("font-size: 20px;")
 
         self.aim_timer_seconds = QLabel("0", self)
-        self.aim_timer_seconds.setGeometry(1190, 25, 90, 20)
+        self.aim_timer_seconds.setGeometry(1140, 4, 75, 20)
         self.aim_timer_seconds.setStyleSheet("font-size: 20px;")
 
         try:
@@ -93,19 +105,19 @@ class Play(QtWidgets.QWidget):
         self.aim_combo.setStyleSheet("font-size: 15px;")
 
         self.hit_object_label = QLabel(f"Hit: {self.hit_points_value}", self)
-        self.hit_object_label.setGeometry(970, 1, 100, 18)
+        self.hit_object_label.setGeometry(940, 1, 100, 18)
         self.hit_object_label.setStyleSheet("font-size: 15px;")
 
         self.miss_object_label = QLabel(f"Miss: {self.miss_points_value}", self)
-        self.miss_object_label.setGeometry(970, 18, 150, 13)
+        self.miss_object_label.setGeometry(940, 18, 100, 13)
         self.miss_object_label.setStyleSheet("font-size: 15px;")
 
-        self.time_label = QLabel(f"Timer", self)
-        self.time_label.setGeometry(1190, 3, 70, 20)
+        self.time_label = QLabel(f"Time:", self)
+        self.time_label.setGeometry(1090, 3, 50, 20)
         self.time_label.setStyleSheet("font-size: 20px;")
 
         self.average_hit_ratio_label = QLabel(f"Ratio: {self.hit_ratio} %", self)
-        self.average_hit_ratio_label.setGeometry(970, 34, 100, 12)
+        self.average_hit_ratio_label.setGeometry(940, 34, 100, 12)
         self.average_hit_ratio_label.setStyleSheet("font-size: 15px;")
 
         self.highest_score_label = QLabel(f"Highest score: {self.highest_score}", self)
@@ -113,7 +125,7 @@ class Play(QtWidgets.QWidget):
         self.highest_score_label.setStyleSheet("font-size: 20px;")
 
         self.fastest_click_label = QLabel(f"Fastest Click: {self.fastest_click}", self)
-        self.fastest_click_label.setGeometry(700, 4, 250, 17)
+        self.fastest_click_label.setGeometry(700, 4, 200, 17)
         self.fastest_click_label.setStyleSheet("font-size: 20px;")
 
         self.hit_combo_label = QLabel(f"Hit Combo: {self.combo_high}", self)
@@ -313,11 +325,37 @@ class Play(QtWidgets.QWidget):
 
     def time_image(self):
         self.time_img = QLabel("", self)
-        self.time_img.setGeometry(1160, 8, 70, 35)
+        self.time_img.setGeometry(1060, 3, 70, 22)
 
         self.time_img_pixmap = QPixmap("Aim_icons/hourglass.png")
-        self.time_img_pixmap = self.time_img_pixmap.scaled(30, 30)
+        self.time_img_pixmap = self.time_img_pixmap.scaled(22, 22)
         self.time_img.setPixmap(self.time_img_pixmap)
+
+    def hit_image(self):
+        self.hit_img = QLabel("", self)
+        self.hit_img.setGeometry(920, 1, 30, 15)
+        self.hit_img_pixmap = QPixmap("Aim_icons/upward-arrow.png")
+        self.hit_img_pixmap = self.hit_img_pixmap.scaled(15, 15)
+        self.hit_img.setPixmap(self.hit_img_pixmap)
+
+    def miss_image(self):
+        self.miss_img = QLabel("", self)
+        self.miss_img.setGeometry(920, 16, 30, 15)
+        self.miss_img_pixmap = QPixmap("Aim_icons/down-arrow.png")
+        self.miss_img_pixmap = self.miss_img_pixmap.scaled(15, 15)
+        self.miss_img.setPixmap(self.miss_img_pixmap)
+
+    def ratio_image(self):
+        self.ratio_img = QLabel("", self)
+        self.ratio_img.setGeometry(920, 31, 30, 15)
+        self.ratio_img_pixmap = QPixmap("Aim_icons/arrow-right.png")
+        self.ratio_img_pixmap = self.ratio_img_pixmap.scaled(15, 15)
+        self.ratio_img.setPixmap(self.ratio_img_pixmap)
+
+    def achievement_image(self):
+        self.achievement_img_pixmap = QPixmap("Aim_icons/quest.png")
+        self.achievement_img_pixmap = self.achievement_img_pixmap.scaled(30, 30)
+        self.achievements_label.setPixmap(self.achievement_img_pixmap)
 
     def add_points(self):
         self.points += 20
@@ -546,6 +584,12 @@ class Play(QtWidgets.QWidget):
                 130,
                 25,
             )
+
+    def show_achievement_stats(self, event):
+        self.a.show()
+
+    def hide_achievement_stats(self, event):
+        self.a.hide()
 
 
 class AimObject(QtWidgets.QPushButton):
