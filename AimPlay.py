@@ -9,7 +9,7 @@ from PySide6.QtMultimedia import QSoundEffect
 
 from PySide6.QtCore import QTimer, QDateTime, QElapsedTimer, Qt, QSize
 from PySide6 import QtWidgets
-from PySide6.QtWidgets import QLabel, QFrame
+from PySide6.QtWidgets import QLabel, QFrame, QPushButton
 from PySide6.QtGui import QPixmap, QCursor, QIcon, QShortcut, QKeySequence
 from PySide6.QtTest import QTest
 
@@ -46,12 +46,13 @@ class Play(QtWidgets.QWidget):
         self.gold = 100
         self.space_helper_count = 10
 
-        self.fastest_click = None
+        self.fastest_click = 10.0
         self.highest_score = 0
         self.hit_ratio = 100
 
-        self.achievements_label = QLabel("Achie", self)
+        self.achievements_label = QLabel("", self)
         self.achievements_label.setGeometry(1250, 5, 50, 40)
+        # self.a = QPushButton()
 
         self.setFixedSize(1280, 1000)
 
@@ -67,6 +68,7 @@ class Play(QtWidgets.QWidget):
         self.miss_image()
         self.ratio_image()
         self.achievement_image()
+        # self.refreshMainWindow()
 
         self.achievements_label.enterEvent = self.show_achievement_stats
         self.achievements_label.leaveEvent = self.hide_achievement_stats
@@ -218,6 +220,7 @@ class Play(QtWidgets.QWidget):
         self.set_attributes()
         self.average_of_hit()
         self.show_miss_combo()
+        # self.refreshMainWindow()
 
         self.obj_first.setGeometry(
             self.new_position_x,
@@ -231,7 +234,7 @@ class Play(QtWidgets.QWidget):
     def clicked_button_change_position(self):
 
         click_time = time.time() - self.button_start_time
-        if self.fastest_click is None or click_time < self.fastest_click:
+        if self.fastest_click == 10.0 or click_time < self.fastest_click:
             self.fastest_click = click_time
             self.fastest_click_label.setText(
                 f"Fastest Click: {round(self.fastest_click,5)}"
@@ -586,10 +589,39 @@ class Play(QtWidgets.QWidget):
             )
 
     def show_achievement_stats(self, event):
+        print("open")
+        self.set_achievement_parms()
         self.a.show()
 
     def hide_achievement_stats(self, event):
+        print("close")
         self.a.hide()
+
+    def set_achievement_parms(self):
+        print("???")
+
+        self.a.player_achievements(
+            self.highest_score,
+            self.fastest_click,
+            self.combo_high,
+            self.hit_points_value,
+        )
+        pos = self.pos()
+        x, y = int(pos.x()), int(pos.y())
+        self.a.setGeometry(x, y + 31, 500, 500)
+        self.a.setStyleSheet("background-color: #135440; color: #ffffff")
+        achievements_params = self.a.geometry()
+        screen = app.primaryScreen()
+
+    # screen_x = screen.size().width()
+    # achievement_x = achievements_params.x()
+    # achievement_width = achievements_params.width()
+
+    # def refreshMainWindow(self):
+    #     self.set_achievement_parms()
+    # #     self.repaint()
+    def abc(self):
+        print("abc")
 
 
 class AimObject(QtWidgets.QPushButton):

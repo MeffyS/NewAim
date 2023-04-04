@@ -41,7 +41,6 @@ class MainWindow(QMainWindow):
         self.minus_points = QPushButton("minus p", self)
         self.minus_points.setGeometry(0, 5, 100, 50)
 
-    def minus_p(self):
         
 
     
