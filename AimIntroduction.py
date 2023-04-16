@@ -21,7 +21,7 @@ class Introduction(QtWidgets.QWidget):
             "WELCOME PLAYER IN OUR AIM TRAINING \
             \n\n\nI am very pleased and glad that u downloaded my aim training \
             \n\n\nCLICK NEXT TO GET MORE INFORMATION ABOUT AIM GAME",
-            self
+            self,
         )
         self.post_introduction_label.setGeometry(25, 130, 560, 200)
         self.post_introduction_label.setAlignment(QtCore.Qt.AlignCenter)
@@ -122,7 +122,6 @@ class Introduction(QtWidgets.QWidget):
         """
         )
 
-
     def update_labels(self):
         if self.step_count == 0:
             self.post_introduction_label.setText(
@@ -135,24 +134,19 @@ class Introduction(QtWidgets.QWidget):
 
             self.post_introduction_label.setText(
                 "Your main goal is fast click on showing object. \nAfter clicked specific object amount \nYou will be advancing on next level \
-            \nYou have only 4 hearts, \nbut you can get more using your gained points"
+            \nYou have only 5 hearts, \nbut you can get more using your gained points"
             )
-            
 
             self.play_button.hide()
             self.post_introduction_label.setStyleSheet(
-            """QLabel {color: #9ab657; background-color: #0e4232;border: 2px solid #45814e;border-radius: 20px;font-size: 20px;}"""
-        )
-            
+                """QLabel {color: #9ab657; background-color: #0e4232;border: 2px solid #45814e;border-radius: 20px;font-size: 20px;}"""
+            )
 
         elif self.step_count == 2:
             self.post_introduction_label.setText("")
             self.play_button.show()
 
-            self.post_introduction_label.setStyleSheet(
-                """QLabel {}"""
-            )
-
+            self.post_introduction_label.setStyleSheet("""QLabel {}""")
 
     def description(self):
         sender = self.sender()
@@ -169,6 +163,8 @@ class Introduction(QtWidgets.QWidget):
             self.step_count -= 1
             print(self.step_count)
             self.update_labels()
+            if self.step_count == 1:
+                self.next_step.show()
             if self.step_count == 0:
                 self.back_step.hide()
                 self.next_step.show()

@@ -1,15 +1,10 @@
-import PySide6
 from PySide6.QtWidgets import (
     QApplication,
     QMainWindow,
     QLabel,
-    QWidget,
-    QHBoxLayout,
-    QVBoxLayout,
-    QPushButton,
-    QGridLayout,
+
 )
-from PySide6.QtGui import QScreen, QGuiApplication, QImage, QPixmap, Qt, QIcon
+from PySide6.QtGui import Qt, QIcon
 
 
 class MyTest(QMainWindow):

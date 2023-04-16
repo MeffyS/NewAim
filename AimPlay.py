@@ -7,13 +7,14 @@ import time
 from PySide6.QtCore import QUrl
 from PySide6.QtMultimedia import QSoundEffect
 
-from PySide6.QtCore import QTimer, QDateTime, QElapsedTimer, Qt, QSize
+from PySide6.QtCore import QTimer, QDateTime, QElapsedTimer, Qt, QSize, QPoint
 from PySide6 import QtWidgets
 from PySide6.QtWidgets import QLabel, QFrame, QPushButton
 from PySide6.QtGui import QPixmap, QCursor, QIcon, QShortcut, QKeySequence
 from PySide6.QtTest import QTest
 
 from test import MyTest
+import AimOptions
 import AimLevels
 
 
@@ -22,9 +23,13 @@ class Play(QtWidgets.QWidget):
         super().__init__()
         self.save = save
 
-        self.a = MyTest()
+        self.achievemenets_window = MyTest()
 
-        self.setCursor(QCursor(QPixmap("Aim_icons/axe.png")))
+        axe_cursor_pixmap = QPixmap("Aim_icons/axe.png")
+        axe_cursor_x_pos = 15
+        axe_cursor_y_pos = 10
+        cursor = QCursor(axe_cursor_pixmap, axe_cursor_x_pos, axe_cursor_y_pos)
+        self.setCursor(cursor)
 
         self.setStyleSheet("background-color: #135440; color: #75a154; ")
 
@@ -51,8 +56,11 @@ class Play(QtWidgets.QWidget):
         self.hit_ratio = 100
 
         self.achievements_label = QLabel("", self)
-        self.achievements_label.setGeometry(1250, 5, 50, 40)
-        # self.a = QPushButton()
+        self.achievements_label.setGeometry(1225, 5, 20, 20)
+
+        self.stop_timer = QPushButton("STOP", self)
+        self.stop_timer.setGeometry(1025, 500, 50, 50)
+        self.stop_timer.clicked.connect(self.stop_time)
 
         self.setFixedSize(1280, 1000)
 
@@ -68,7 +76,6 @@ class Play(QtWidgets.QWidget):
         self.miss_image()
         self.ratio_image()
         self.achievement_image()
-        # self.refreshMainWindow()
 
         self.achievements_label.enterEvent = self.show_achievement_stats
         self.achievements_label.leaveEvent = self.hide_achievement_stats
@@ -94,8 +101,12 @@ class Play(QtWidgets.QWidget):
         self.aim_username.setGeometry(25, 25, 260, 25)
         self.aim_username.setStyleSheet("font-size: 20px;")
 
+        self.level_label = QLabel("Level:", self)
+        self.level_label.setGeometry(330, 25, 100, 25)
+        self.level_label.setStyleSheet("font-size: 20px;")
+
         self.aim_level = QLabel(f"{0}", self)
-        self.aim_level.setGeometry(330, 25, 30, 25)
+        self.aim_level.setGeometry(393, 25, 60, 25)
         self.aim_level.setStyleSheet("font-size: 20px;")
 
         self.aim_points = QLabel(f"Points: {self.points:,}", self)
@@ -123,7 +134,7 @@ class Play(QtWidgets.QWidget):
         self.average_hit_ratio_label.setStyleSheet("font-size: 15px;")
 
         self.highest_score_label = QLabel(f"Highest score: {self.highest_score}", self)
-        self.highest_score_label.setGeometry(700, 25, 160, 25)
+        self.highest_score_label.setGeometry(700, 25, 180, 25)
         self.highest_score_label.setStyleSheet("font-size: 20px;")
 
         self.fastest_click_label = QLabel(f"Fastest Click: {self.fastest_click}", self)
@@ -172,11 +183,16 @@ class Play(QtWidgets.QWidget):
         self.last_hit.hide()
 
         self.menu_line = QFrame(self)
-        # self.menu_line.setFrameShape(QFrame.HLine)
         self.menu_line.setFrameShadow(QFrame.Sunken)
         self.menu_line.setGeometry(2, 50, 1278, 10)
         self.menu_line.setLineWidth(4)
         self.menu_line.setStyleSheet("background-color: white")
+
+        self.options_back = QPushButton("", self)
+        self.options_back.setGeometry(1250, 5, 20, 20)
+        self.options_back.setIcon(QIcon("aim_icons/settings.png"))
+        self.options_back.setIconSize(QSize(20, 20))
+        self.options_back.clicked.connect(self.open_options)
 
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.no_clicked_button_change_position)
@@ -220,7 +236,6 @@ class Play(QtWidgets.QWidget):
         self.set_attributes()
         self.average_of_hit()
         self.show_miss_combo()
-        # self.refreshMainWindow()
 
         self.obj_first.setGeometry(
             self.new_position_x,
@@ -242,7 +257,6 @@ class Play(QtWidgets.QWidget):
 
         self.button_start_time = time.time()
         self.change_obj_first_position()
-        self.show_hit_combo()
 
         QTest.mouseRelease(self.obj_first, Qt.LeftButton)
 
@@ -261,7 +275,6 @@ class Play(QtWidgets.QWidget):
         )
 
     def update_time_label(self):
-
         self.main_game_time = self.start_time.secsTo(QDateTime.currentDateTime())
         self.main_game_mins = self.main_game_time // 60
         self.main_game_secs = self.main_game_time % 60
@@ -357,7 +370,7 @@ class Play(QtWidgets.QWidget):
 
     def achievement_image(self):
         self.achievement_img_pixmap = QPixmap("Aim_icons/quest.png")
-        self.achievement_img_pixmap = self.achievement_img_pixmap.scaled(30, 30)
+        self.achievement_img_pixmap = self.achievement_img_pixmap.scaled(20, 20)
         self.achievements_label.setPixmap(self.achievement_img_pixmap)
 
     def add_points(self):
@@ -373,7 +386,6 @@ class Play(QtWidgets.QWidget):
 
     def remove_points(self):
 
-        print("p,", self.points)
         self.points -= 1
         self.aim_points.setText(f"Points: {self.points:,}")
         self.new_level = AimLevels.points_checker(self.points)
@@ -443,6 +455,7 @@ class Play(QtWidgets.QWidget):
         START_X_AND_Y = 70
 
         if int(self.aim_level.text()) == self.level_options.level:
+            self.level = self.level_options.level
 
             self.level_border_x = int(self.level_options.border_x)
             self.level_border_y = int(self.level_options.border_y)
@@ -509,6 +522,7 @@ class Play(QtWidgets.QWidget):
         """
 
         global_mouse_pos = QCursor.pos()
+
         local_mouse_pos = self.mapFromGlobal(
             global_mouse_pos
         )  # Refer mouse pos from screen to mouse application pos
@@ -523,18 +537,16 @@ class Play(QtWidgets.QWidget):
     def click_functionality(self):
 
         self.hit_effect.play()
-
         self.add_points()
         self.hit_points()
         self.combo_result()
-
         self.set_miss_combo()
-
         self.set_attributes()
         self.average_of_hit()
         self.click_gold()
         self.click_mouse_pos()
         self.set_highest_score()
+        self.show_hit_combo()
 
         self.obj_first.setGeometry(
             self.new_position_x,
@@ -590,17 +602,18 @@ class Play(QtWidgets.QWidget):
 
     def show_achievement_stats(self, event):
         print("open")
+        self.timer.stop()
         self.set_achievement_parms()
-        self.a.show()
+        self.achievemenets_window.show()
 
     def hide_achievement_stats(self, event):
+        self.timer.start()
         print("close")
-        self.a.hide()
+        self.achievemenets_window.hide()
 
     def set_achievement_parms(self):
-        print("???")
 
-        self.a.player_achievements(
+        self.achievemenets_window.player_achievements(
             self.highest_score,
             self.fastest_click,
             self.combo_high,
@@ -608,20 +621,24 @@ class Play(QtWidgets.QWidget):
         )
         pos = self.pos()
         x, y = int(pos.x()), int(pos.y())
-        self.a.setGeometry(x, y + 31, 500, 500)
-        self.a.setStyleSheet("background-color: #135440; color: #ffffff")
-        achievements_params = self.a.geometry()
+        self.achievemenets_window.setGeometry(x, y + 31, 500, 500)
+        self.achievemenets_window.setStyleSheet(
+            "background-color: #135440; color: #ffffff"
+        )
+        achievements_params = self.achievemenets_window.geometry()
         screen = app.primaryScreen()
 
-    # screen_x = screen.size().width()
-    # achievement_x = achievements_params.x()
-    # achievement_width = achievements_params.width()
-
-    # def refreshMainWindow(self):
-    #     self.set_achievement_parms()
-    # #     self.repaint()
-    def abc(self):
-        print("abc")
+    def stop_time(self):
+        if self.timer.isActive():
+            self.timer.stop()
+        else:
+            self.timer.start()
+            print("started")
+    
+    def open_options(self):
+        self.options = AimOptions.Options()
+        self.options.show()
+        self.close()
 
 
 class AimObject(QtWidgets.QPushButton):
