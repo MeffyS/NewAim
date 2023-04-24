@@ -22,6 +22,9 @@ class Play(QtWidgets.QWidget):
     def __init__(self, save):
         super().__init__()
         self.save = save
+        # print(self.save)
+
+            
 
         self.achievemenets_window = MyTest()
 
@@ -35,6 +38,7 @@ class Play(QtWidgets.QWidget):
 
         self.aim_seconds = 0
         self.points = 0
+        self.new_heart_count = 5
 
         self.combo_points_counter = 0
         self.combo_points = 0
@@ -97,6 +101,17 @@ class Play(QtWidgets.QWidget):
 
         except Exception:
             self.aim_username = QLabel(f"Username: {os.getlogin()}", self)
+
+
+        try:
+            if self.save["game_options"] == "PLAY":
+                print("PLAY")
+        except Exception:
+            print("Play doesnt exist yet")
+        else:
+            
+            self.aim_username.setText(save['username'])
+            # print(self.save)
 
         self.aim_username.setGeometry(25, 25, 260, 25)
         self.aim_username.setStyleSheet("font-size: 20px;")
@@ -405,8 +420,6 @@ class Play(QtWidgets.QWidget):
 
     def hearts_remove(self):
 
-        self.new_heart_count = 5
-
         heart = {
             5: [0, 100],
             4: [101, 200],
@@ -625,8 +638,8 @@ class Play(QtWidgets.QWidget):
         self.achievemenets_window.setStyleSheet(
             "background-color: #135440; color: #ffffff"
         )
-        achievements_params = self.achievemenets_window.geometry()
-        screen = app.primaryScreen()
+        # achievements_params = self.achievemenets_window.geometry()
+        # screen = app.primaryScreen()
 
     def stop_time(self):
         if self.timer.isActive():
@@ -634,9 +647,25 @@ class Play(QtWidgets.QWidget):
         else:
             self.timer.start()
             print("started")
-    
+
     def open_options(self):
-        self.options = AimOptions.Options()
+        print(self.save)
+        if self.save == "":
+            print("XD")
+            self.save = {"username": os.getlogin()}
+        else:
+            print(self.save)
+
+        game_save = {
+            "game_options": "GAME",
+            "username": self.save["username"],
+            "hearts": self.new_heart_count,
+        }
+        # if self.save['username'] != '' or self.save['username'] != None:
+        #     game_save[1] = 'Meffy'
+
+        self.timer.stop()
+        self.options = AimOptions.Options(game_save)
         self.options.show()
         self.close()
 

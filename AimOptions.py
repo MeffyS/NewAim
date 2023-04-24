@@ -14,10 +14,15 @@ from PySide6.QtWidgets import (
 from PySide6 import QtCore
 from PySide6.QtGui import QCursor, QIcon, Qt, QColor
 
+import AimPlay
+
 
 class Options(QtWidgets.QTabWidget):
-    def __init__(self):
+    def __init__(self, save):
         super().__init__()
+        self.save = save
+        # print(self.save['game_options'])
+        
 
         self.setFixedHeight(600)
         self.setFixedWidth(600)
@@ -52,6 +57,7 @@ class Options(QtWidgets.QTabWidget):
         )
 
     def user_options(self):
+
         self.user_label = QLabel("User", self)
         self.user_label.setGeometry(2, 78, 80, 30)
         self.user_label.setStyleSheet(
@@ -145,6 +151,20 @@ class Options(QtWidgets.QTabWidget):
         self.user_down_line.setGeometry(2, 70, 594, 10)
         self.user_down_line.setLineWidth(4)
         self.user_down_line.setStyleSheet("background-color: #61c7a2")
+
+        try:
+            if self.save["game_options"] == "GAME":
+                self.username_label.setText(self.save["username_set"])
+                print(self.save["hearts"])
+        except Exception:
+            print("x")
+        #     try:
+        #         self.username_label.setText(self.save['username_set'])
+        #     except Exception:
+        #         self.username_label.setText(self.save['username_not_set'])
+
+        # else:
+        #     print("ERROR")
 
     def audio_options(self):
 
@@ -290,7 +310,7 @@ class Options(QtWidgets.QTabWidget):
         )
 
     def set_difficulty(self):
-        
+
         sender = self.sender()
         if sender.text() == "Easy":
             print("Easy")
@@ -307,19 +327,45 @@ class Options(QtWidgets.QTabWidget):
             self.choosed_difficulty_label.setText("Hard")
 
     def back_to_menu(self):
-
+        self.start_game = True
         user = self.username_label.text()
+
+        if self.start_game is True:
+            print(self.start_game)
+            self.start_game = False
+            save = {"username": user.capitalize()}
+            self.menu_back = AimMenu.Menu(save)
+            self.menu_back.show()
+            self.close()
+
+        if self.save["username"] == self.username_label.text():
+            self.menu_back.close()
+            self.play_back = AimPlay.Play(self.save)
+            self.play_back.show()
+            
+            self.close()
+
+        try:
+            if self.save["username"] != self.username_label.text():
+                self.menu_back.close()
+                self.save["username"] = self.username_label.text()
+                if self.save["game_options"] == "GAME":
+                    self.save["game_options"] == "PLAY"
+                    self.save["username"] = self.username_label.text()
+                    self.play_back = AimPlay.Play(self.save)
+                    self.play_back.show()
+                    self.close()
+        except Exception:
+            print('Player username doesn\'t exist yet')
+        
+        
+        
 
         if self.username_label.text() in ("Choose Username", ""):
             self.username_warning.setText("You must enter username!")
             self.username_warning.setStyleSheet("color: #ff5c58;")
 
-        else:
-            save = {"username": user.capitalize()}
 
-            self.menu_back = AimMenu.Menu(save)
-            self.menu_back.show()
-            self.close()
 
     def choose_color(self):
         color_v_counter = 0
@@ -373,7 +419,7 @@ class Options(QtWidgets.QTabWidget):
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
 
-    aim_options = Options()
+    aim_options = Options("")
     aim_options.show()
 
     sys.exit(app.exec())

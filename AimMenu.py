@@ -121,7 +121,7 @@ class Menu(QtWidgets.QWidget):
 
     def aim_options(self):
         self.close()
-        self.options_window = AimOptions.Options()
+        self.options_window = AimOptions.Options('')
         self.options_window.show()
         self.close()
 
