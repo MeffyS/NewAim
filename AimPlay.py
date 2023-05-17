@@ -22,7 +22,7 @@ class Play(QtWidgets.QWidget):
     def __init__(self, save):
         super().__init__()
         self.save = save
-        # print(self.save)
+        print(self.save)
 
             
 
@@ -660,6 +660,11 @@ class Play(QtWidgets.QWidget):
             "game_options": "GAME",
             "username": self.save["username"],
             "hearts": self.new_heart_count,
+            "gold": self.gold,
+            "points": self.points,
+            "level": self.level,
+            "saved high combo": self.combo_high,
+            "unsaved high combo": self.combo_points_counter,
         }
         # if self.save['username'] != '' or self.save['username'] != None:
         #     game_save[1] = 'Meffy'
